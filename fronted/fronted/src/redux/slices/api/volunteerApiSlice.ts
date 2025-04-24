@@ -12,7 +12,7 @@ const volunteerApiSlice = apiSlice.injectEndpoints({
     }),
     createVolunteer: builder.mutation({
       query: (newVolunteer) => ({
-        url: "/volunteerRoutes/signUpV",
+        url: "auth/registerV",
         method: "POST",
         body: newVolunteer
       }),

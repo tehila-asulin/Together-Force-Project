@@ -13,7 +13,6 @@ const organizationApiSlice = apiSlice.injectEndpoints({
     }),
     createOrganization: builder.mutation({
       query: (newOrganization) => ({
-        // url: "/organizationRoutes/signUpO",
         url: "auth/register",
         method: "POST",
         body: newOrganization
