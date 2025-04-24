@@ -22,6 +22,7 @@ const MyProfile=() =>{
       profileImage:"",  
       email: "", 
       phone: "",
+      password:"",
       selectedVolunteerOptions: [] 
   }});
 
@@ -122,6 +123,21 @@ const MyProfile=() =>{
                 control={control}
                 render={({ field }) => (
                   <TextField {...field} label="Email" fullWidth margin="normal" error={!!errors.email} helperText={errors.email?.message} />
+                )}
+              />
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="password"
+                    label="Password"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                  />
                 )}
               />
             </Stack>

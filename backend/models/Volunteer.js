@@ -8,7 +8,8 @@ const volunteerSchema = new mongoose.Schema({
     phone: { type: String, required: true },
     history: { type: [String], default: [] }, // היסטוריה - רשימה של מחרוזות
     profileImage: { type: String },
-    idNumber:{ type: String, required: true, unique: true } // תמונת פרופיל
+    idNumber:{ type: String, required: true, unique: true },
+    password: { type: String, required: true }
 });
 
   
