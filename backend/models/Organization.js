@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const organizationSchema = new mongoose.Schema({
 
-  name: String,
+  organizationName: String,
   email:String, 
   phone:String,
   history:String,
-  image:String,
+  profileImage:String,
   password:String,
-  AssociationNumber:Number
+  organizationNumber:Number
 });
 module.exports = mongoose.model('Organization', organizationSchema);
+ 

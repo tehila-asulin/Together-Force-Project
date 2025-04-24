@@ -5,6 +5,7 @@ import AppLayout from "../components/AppLayout";
 import About from "../components/About"
 import Contact from "../components/Contact"
 import MyProfile from "../components/singIn V/MyProfil";
+import OrgProfile from "../components/singIn V/singUpOrganization"
 const router = createBrowserRouter([
     {
         element: <AppLayout/>, 
@@ -13,7 +14,8 @@ const router = createBrowserRouter([
     {path:"/about", element:<About/>},
     {path:"/contact", element:<Contact/>},
     {path:"/about", element:<About/>},
-    {path:"/signup/volunteer", element:<MyProfile/>}
+    {path:"/signup/volunteer", element:<MyProfile/>},
+    {path:"/signup/organization", element:<OrgProfile/>}
 ]   
     } 
 ]);

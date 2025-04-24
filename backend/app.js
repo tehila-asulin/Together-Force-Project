@@ -1,17 +1,42 @@
-require("dotenv").config()
-const express = require('express')
-const mongoose = require('mongoose')
-const VolunteerRouter =require('./routes/volenteerRoutes')
-const volunteeringRoutes =require('./routes/volunteeringRoutes')
-const organizationRoutes =require('./routes/organizationRoutes')
-const bodyParser = require('body-parser');
-const app=express();
-app.use(bodyParser.json());
-app.use('/TogetherForce/volenteerRoutes', VolunteerRouter);
-app.use('/TogetherForce/volunteeringRoutes', volunteeringRoutes);
-app.use('/TogetherForce/organizationRoutes', organizationRoutes);
- const PORT=process.env.PORT;
+require("dotenv").config();
 
-mongoose.connect(process.env.CONECTION_URL).then(
-    ()=>app.listen(PORT,()=>console.log(`server runing on port ${PORT}`)))
-    .catch((error)=>console.log(error.message));    
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require("cors");
+const bodyParser = require('body-parser');
+
+const volunteerRoutes = require('./routes/volunteerRoutes');
+const volunteeringRoutes = require('./routes/volunteeringRoutes');
+const organizationRoutes = require('./routes/organizationRoutes');
+
+const corsOptions = require("./config/corsOptions");
+const connectDB = require("./config/dbConn");
+
+const app = express();
+const PORT = process.env.PORT || 8000;
+
+// Middlewares
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+
+// Routes
+app.use('/api/volunteerRoutes', volunteerRoutes);
+app.use('/api/volunteeringRoutes', volunteeringRoutes);
+app.use('/api/organizationRoutes', organizationRoutes);
+app.use("/api/auth", require("./routes/authRoutes"))
+
+// Connect to DB and start server
+connectDB();
+
+mongoose.connect(process.env.CONNECTION_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    app.listen(PORT, () => {
+        console.log(`server running on port ${PORT}`);
+    });
+})
+.catch((error) => {
+    console.log(error.message);
+});
