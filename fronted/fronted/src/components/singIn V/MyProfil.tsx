@@ -9,6 +9,7 @@ import volunteerCategories from "../../../public/volunteerCategories.json";
 import profileSchema from "../../schemas/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import cities from "../../../public/dataCities.json";
+import {useCreateVolunteerMutation} from '../../redux/slices/api/volunteerApiSlice'
 
 const MyProfile=() =>{
   const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
@@ -27,12 +28,22 @@ const MyProfile=() =>{
   const [searchTerm, setSearchTerm] =React.useState("");
   const [showMenu, setShowMenu] = React.useState(false);
 
+   const [createNewVolunteer]=useCreateVolunteerMutation()
+
   const selectedCities = watch("selectedCities");
   const profileImage = watch("profileImage");
 
   const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-    reset();
+    try{
+      console.log("Form Data:", data);
+      createNewVolunteer(data)
+      reset();
+
+    }
+    catch{
+    console.log("error to add volunteer");
+    }
+
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
