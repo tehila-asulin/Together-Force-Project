@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import cities from "../../../public/dataCities.json";
 import {useCreateVolunteerMutation} from '../../redux/slices/api/volunteerApiSlice'
 
-const MyProfile=() =>{
+const SingUpVolunteer=() =>{
   const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
     mode: "onBlur",
     resolver: zodResolver(profileSchema), 
@@ -244,4 +244,4 @@ const MyProfile=() =>{
     </Box>
   );
 }
-export default MyProfile
+export default SingUpVolunteer

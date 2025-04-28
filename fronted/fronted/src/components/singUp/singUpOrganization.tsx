@@ -7,7 +7,7 @@ import profileOrganizationSchema from "../../schemas/profileOrganizationSchema"
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useCreateOrganizationMutation} from '../../redux/slices/api/organizationApiSlice'
 
-const singUpOrganization = () => {
+const SingUpOrganization = () => {
     const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
         mode: "onBlur",
         resolver: zodResolver(profileOrganizationSchema), 
@@ -141,4 +141,4 @@ const singUpOrganization = () => {
       );
 }
 
-export default singUpOrganization
+export default SingUpOrganization
