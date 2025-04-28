@@ -2,12 +2,20 @@ import apiSlice from './apiSlice';
 
 const volunteerApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    loginVolunteer: builder.mutation({
+      query: (credentials) => ({
+        url: "auth/loginV",
+        method: "POST",
+        body: credentials
+      }),
+    })
+    ,
     getAllVolunteers: builder.query({
       query: () => "/volunteerRoutes/allVolunteers",
       providesTags: ["TogetherForce"]
     }),
     getVolunteerById: builder.query({
-      query: (id) => `/volunteerRoutes/${id}`,
+      query: (id) =>`auth/loginV/${id}`,
       providesTags: ["TogetherForce"]
     }),
     createVolunteer: builder.mutation({
@@ -42,7 +50,10 @@ export const {
   useGetVolunteerByIdQuery, 
   useCreateVolunteerMutation, 
   useEditVolunteerMutation, 
-  useRemoveVolunteerMutation 
+  useRemoveVolunteerMutation,
+  useLoginVolunteerMutation 
 } = volunteerApiSlice;
 
 export default volunteerApiSlice;
+
+

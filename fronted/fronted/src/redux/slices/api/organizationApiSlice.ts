@@ -3,6 +3,13 @@ import apiSlice from './apiSlice';
 const organizationApiSlice = apiSlice.injectEndpoints({
 
   endpoints: (builder) => ({
+    loginOrganization: builder.mutation({
+      query: (credentials) => ({
+        url: "auth/login",
+        method: "POST",
+        body: credentials
+      }),
+    }),
     getAllOrganizations: builder.query({
       query: () => "/organizationRoutes/AllOrganizations",
       providesTags: ["TogetherForce"]
@@ -44,7 +51,8 @@ export const {
   useGetOrganizationByIdQuery, 
   useCreateOrganizationMutation, 
   useEditOrganizationMutation, 
-  useRemoveOrganizationMutation 
+  useRemoveOrganizationMutation,
+  useLoginOrganizationMutation
 } = organizationApiSlice;
 
 export default organizationApiSlice;
