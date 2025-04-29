@@ -26,13 +26,13 @@ const jwt= require('jsonwebtoken')
 // }
 
 const register = async (req, res) => {
-    const { organizationName, email, phone, profileImage, password, organizationNumber } = req.body;
+    const { name, email, phone, profileImage, password, organizationNumber } = req.body;
   
-    if (!organizationName || !password) {
+    if (!name || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
   
-    const duplicate = await Organization.findOne({ organizationName }).lean();
+    const duplicate = await Organization.findOne({ name }).lean();
     if (duplicate) {
       return res.status(409).json({ message: "Duplicate organization name" });
     }
@@ -40,7 +40,7 @@ const register = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10);
   
     const organizationObject = {
-      organizationName,
+      name,
       email,
       phone,
       profileImage,
@@ -51,14 +51,14 @@ const register = async (req, res) => {
     const organization = await Organization.create(organizationObject);
   
     if (organization) {
-      return res.status(201).json({ message: `New Organization ${organization.organizationName} created` });
+      return res.status(201).json({ message: `New Organization ${organization.name} created` });
     } else {
       return res.status(400).json({ message: 'Invalid Organization received' });
     }
   };
   const registerV = async (req, res) => {
     const {
-      fullName,
+      name,
       email,
       phone,
       profileImage,
@@ -68,8 +68,10 @@ const register = async (req, res) => {
       history,
       password
     } = req.body;
+
+    
   
-    if (!fullName || !password) {
+    if (!name || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
   
@@ -81,23 +83,23 @@ const register = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10);
   
     const volunteerObject = {
-      fullName,
+      name,
       email,
       phone,
       profileImage,
       idNumber,
       selectedVolunteerOptions,
       selectedCities,
-      history,
+      history: history || [],
       password:hashedPwd
     } 
   
     const volunteer = await Volunteer.create(volunteerObject);
   
     if (volunteer) {
-      return res.status(201).json({ message: `New Organization ${volunteer.fullName} created` });
+      return res.status(201).json({ message: `New Volunteer ${volunteer.name} created` });
     } else {
-      return res.status(400).json({ message: 'Invalid Organization received' });
+      return res.status(400).json({ message: 'Invalid Volunteer received' });
     }
   };
 
@@ -125,7 +127,7 @@ const loginV = async (req, res) => {
   }
 
   const volunteerInfo = {
-    fullName: foundVolunteer.fullName,
+    name: foundVolunteer.name,
     email: foundVolunteer.email,
     phone: foundVolunteer.phone,
     profileImage: foundVolunteer.profileImage,
@@ -163,7 +165,7 @@ const login = async (req, res) => {
   }
 
   const organizationInfo = {
-    organizationName: foundOrganization.organizationName,
+  name: foundOrganization.name,
   email:foundOrganization.email, 
   phone:foundOrganization.phone,
   history:foundOrganization.history,

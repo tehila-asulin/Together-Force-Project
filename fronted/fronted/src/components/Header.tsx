@@ -24,6 +24,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
   const userMode = useSelector(selectUserMode);
+
+
   const signupOpen = Boolean(signupAnchorEl);
   const signinOpen = Boolean(signinAnchorEl);
 
@@ -37,6 +39,8 @@ const Header = () => {
 
   const handleClose = (mode?: keyof UserModes) => {
     if (mode) {
+      console.log(mode);
+      
       dispatch(setUserMode(mode));
     }
     setSignupAnchorEl(null);
@@ -46,29 +50,10 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("userMode");
     dispatch(setCurrentUser(null))
     dispatch(setUserMode("None"))
     navigate("/");
-  };
-
-  const getDisplayName = () => {
-    if (!currentUser) return '';
-  
-    if (userMode === "Volunteer" && "fullName" in currentUser) {
-      return currentUser.fullName;
-    }
-  
-    if (userMode === "Organization" && "organizationName" in currentUser) {
-      return currentUser.organizationName;
-    }
-  
-    return '';
-  };
-  
-
-  const getProfileImage = () => {
-    if (!currentUser) return '';
-    return currentUser.profileImage || "/static/images/avatar/2.jpg";
   };
 
   return (
@@ -93,10 +78,10 @@ const Header = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {currentUser ? (
             <>
-              <Typography sx={{ color: "white" }}>{getDisplayName()}</Typography>
+              <Typography sx={{ color: "white" }}>{currentUser.name}</Typography>
               <Tooltip title="Logout">
                 <IconButton onClick={handleLogout}>
-                  <Avatar alt={getDisplayName()} src={getProfileImage()} sx={{ width: 36, height: 36 }} />
+                  <Avatar alt={currentUser.name} src={currentUser.profileImage || "/static/images/avatar/2.jpg"} sx={{ width: 36, height: 36 }} />
                 </IconButton>
               </Tooltip>
             </>
