@@ -1,6 +1,6 @@
 import { z } from "zod";
 const profileSchema = z.object({
-  fullName: z.string().min(2, "יש להזין שם מלא (לפחות 2 תווים)"),
+  name: z.string().min(2, "יש להזין שם מלא (לפחות 2 תווים)"),
   idNumber: z
     .string()
     .min(9, "תעודת זהות חייבת להכיל 9 ספרות")

@@ -1,6 +1,6 @@
 export interface Organization {
     _id?: string; 
-    organizationName: string;
+    name: string;
     email: string;
     phone: string;
     history: string;

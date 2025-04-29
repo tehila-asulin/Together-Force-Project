@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const organizationSchema = new mongoose.Schema({
 
-  organizationName: String,
+ name: String,
   email:String, 
   phone:String,
   history:String,

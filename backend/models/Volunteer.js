@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const volunteerSchema = new mongoose.Schema({
-    fullName: { type: String, required: true },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     selectedVolunteerOptions: { type: [String], default: [] }, // מערך של מחרוזות
     selectedCities: { type: [String], default: [] }, // מערך של מחרוזות

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const profileOrganizationSchema = z.object({
-  organizationName: z.string().min(2, "יש להזין שם מלא (לפחות 2 תווים)"),
+  name: z.string().min(2, "יש להזין שם מלא (לפחות 2 תווים)"),
   phone: z
     .string()
     .min(10, "מספר טלפון לא תקין")

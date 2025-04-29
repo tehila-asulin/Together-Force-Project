@@ -15,12 +15,13 @@ import { jwtDecode } from 'jwt-decode';
 import { setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
 import { Volunteer } from '../../interface/Volunteer';
 import { Organization } from '../../interface/Organization'; 
-
+import {  useNavigate } from "react-router";
 const SignIn = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+    const navigate = useNavigate();
   const dispatch = useDispatch();
   const userMode = useSelector(selectUserMode);
   const [loginVolunteer, { isLoading: isLoadingVolunteer }] = useLoginVolunteerMutation();
@@ -50,9 +51,11 @@ const SignIn = () => {
 
       const userData = jwtDecode<Volunteer | Organization>(accessToken);
       localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("userMode", JSON.stringify(userMode));
       dispatch(setCurrentUser(userData));
       
       setSuccess(true);
+      navigate("/");
     } catch (err: any) {
       setError(err?.data?.message || "שגיאה בהתחברות");
     }

@@ -12,7 +12,7 @@ const SingUpOrganization = () => {
         mode: "onBlur",
         resolver: zodResolver(profileOrganizationSchema), 
         defaultValues: { 
-          organizationName: "", 
+          name: "", 
           profileImage: "",  
           email: "", 
           phone: "",
@@ -81,10 +81,10 @@ const SingUpOrganization = () => {
                   </Box>
     
                   <Controller 
-                    name="organizationName"
+                    name="name"
                     control={control}
                     render={({ field }) => (
-                      <TextField {...field} label="Full Name" fullWidth margin="normal" error={!!errors.organizationName} helperText={errors.organizationName?.message} />
+                      <TextField {...field} label="Full Name" fullWidth margin="normal" error={!!errors.name} helperText={errors.name?.message} />
                     )}
                   />
                   <Controller 

@@ -16,7 +16,7 @@ const SingUpVolunteer=() =>{
     mode: "onBlur",
     resolver: zodResolver(profileSchema), 
     defaultValues: { 
-      fullName: "", 
+      name: "", 
       idNumber: "", 
       selectedCities: [], 
       profileImage:"",  
@@ -98,10 +98,10 @@ const SingUpVolunteer=() =>{
               </Box>
 
               <Controller 
-                name="fullName"
+                name="name"
                 control={control}
                 render={({ field }) => (
-                  <TextField {...field} label="Full Name" fullWidth margin="normal" error={!!errors.fullName} helperText={errors.fullName?.message} />
+                  <TextField {...field} label="Full Name" fullWidth margin="normal" error={!!errors.name} helperText={errors.name?.message} />
                 )}
               />
               <Controller 

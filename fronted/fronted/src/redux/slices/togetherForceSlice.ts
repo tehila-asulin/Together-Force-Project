@@ -12,11 +12,12 @@ interface UserState {
     currentUser: Volunteer | null| Organization;
     userMode: keyof UserModes;  
 }
-
 const initialState: UserState = {
-    currentUser:null,
-    userMode: "None",
-};
+    currentUser: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
+  userMode: (localStorage.getItem("userMode") as keyof UserModes) || "None",
+  };
+  
+
 
 const togetherForceSlice = createSlice({
     name: "togetherForce",
