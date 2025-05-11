@@ -4,7 +4,7 @@ import { Done } from "@mui/icons-material";
 import { TextField } from "@mui/material";
 import Button from "@mui/joy/Button";
 import { Controller, useForm } from "react-hook-form";
-import { styles } from "../../styles/style";  // ייבוא העיצובים
+import { styles } from "../../styles/style"
 import volunteerCategories from "../../../public/volunteerCategories.json"; 
 import profileSchema from "../../schemas/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";

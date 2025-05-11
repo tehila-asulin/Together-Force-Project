@@ -1,24 +1,35 @@
 import apiSlice from './apiSlice';
+import { Volunteer } from "../../../interface/Volunteer"
+
+interface VolunteerCredentials {
+  email: string;
+  password: string;
+}
 
 const volunteerApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    loginVolunteer: builder.mutation({
+    loginVolunteer: builder.mutation<{ accessToken: string }, VolunteerCredentials>({
       query: (credentials) => ({
         url: "auth/loginV",
         method: "POST",
         body: credentials
       }),
-    })
-    ,
-    getAllVolunteers: builder.query({
-      query: () => "/volunteerRoutes/allVolunteers",
+    }),
+
+    getAllVolunteers: builder.query<Volunteer[], void>({
+      query: () => ({
+        url: "/volunteerRoutes/allVolunteers",
+        method: "GET"
+      }),
       providesTags: ["TogetherForce"]
     }),
-    getVolunteerById: builder.query({
-      query: (id) =>`auth/loginV/${id}`,
+
+    getVolunteerById: builder.query<Volunteer, string>({
+      query: (id) => `auth/loginV/${id}`,
       providesTags: ["TogetherForce"]
     }),
-    createVolunteer: builder.mutation({
+
+    createVolunteer: builder.mutation<Volunteer, Volunteer>({
       query: (newVolunteer) => ({
         url: "auth/registerV",
         method: "POST",
@@ -26,7 +37,8 @@ const volunteerApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["TogetherForce"]
     }),
-    editVolunteer: builder.mutation({
+
+    editVolunteer: builder.mutation<Volunteer, Volunteer>({
       query: (updatedVolunteer) => ({
         url: `/volunteerRoutes/${updatedVolunteer._id}`,
         method: "PUT",
@@ -34,7 +46,8 @@ const volunteerApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["TogetherForce"]
     }),
-    removeVolunteer: builder.mutation({
+
+    removeVolunteer: builder.mutation<{ message: string }, string>({
       query: (id) => ({
         url: `/volunteerRoutes/${id}`,
         method: "DELETE"
@@ -55,5 +68,3 @@ export const {
 } = volunteerApiSlice;
 
 export default volunteerApiSlice;
-
-

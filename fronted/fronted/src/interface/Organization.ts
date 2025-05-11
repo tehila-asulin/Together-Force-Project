@@ -3,7 +3,7 @@ export interface Organization {
     name: string;
     email: string;
     phone: string;
-    history: string;
+    history:any[];
     profileImage: string;
     password?: string; 
     organizationNumber: number;

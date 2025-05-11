@@ -2,28 +2,6 @@ const Organization = require('../models/Organization');
 const Volunteer = require('../models/Volunteer');
 const bcrypt= require('bcrypt')
 const jwt= require('jsonwebtoken')
-// const login = async (req,res)=>{ 
-//     const { name, password } = req.body
-//     if (!name || !password) {
-//         return res.status(400).json({message:'All fields are required'})}
-//         const foundOrganization = await Organization.findOne({name}).lean()
-//         if (!foundOrganization || !foundOrganization.active) {
-//             return res.status(401).json({ message: 'Unauthorized' })
-//             }
-//     const match = await bcrypt.compare(password, foundOrganization.password)
-//     if(!match)return res.status(401).json({message:'Unauthorized' })
-//     res.send("Logged In")
-//     const organizationInfo= {_id:foundOrganization._id,name:foundOrganization.name,
-//         email:foundOrganization.email,
-//         phone:foundOrganization.phone,
-//         history:foundOrganization.history,
-//         image:foundOrganization.image,
-//     }
-//     const accessToken= jwt.sign(organizationInfo,process.env.ACCESS_TOKEN_SECRET)
-//     res.json({accessToken:accessToken})
-
-
-// }
 
 const register = async (req, res) => {
     const { name, email, phone, profileImage, password, organizationNumber } = req.body;

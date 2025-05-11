@@ -25,7 +25,6 @@ const Header = () => {
   const currentUser = useSelector(selectCurrentUser);
   const userMode = useSelector(selectUserMode);
 
-
   const signupOpen = Boolean(signupAnchorEl);
   const signinOpen = Boolean(signinAnchorEl);
 
