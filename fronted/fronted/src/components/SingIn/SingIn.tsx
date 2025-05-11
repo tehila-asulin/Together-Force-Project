@@ -9,13 +9,16 @@ import {
   Alert
 } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginVolunteerMutation } from '../../redux/slices/api/volunteerApiSlice';
-import { useLoginOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
+import { useLoginVolunteerMutation, useGetAllVolunteersQuery} from '../../redux/slices/api/volunteerApiSlice';
+import { useLoginOrganizationMutation,useGetAllOrganizationsQuery } from '../../redux/slices/api/organizationApiSlice';
 import { jwtDecode } from 'jwt-decode';
 import { setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
 import { Volunteer } from '../../interface/Volunteer';
 import { Organization } from '../../interface/Organization'; 
 import {  useNavigate } from "react-router";
+
+
+
 const SignIn = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -26,13 +29,13 @@ const SignIn = () => {
   const userMode = useSelector(selectUserMode);
   const [loginVolunteer, { isLoading: isLoadingVolunteer }] = useLoginVolunteerMutation();
   const [loginOrganization, { isLoading: isLoadingOrganization }] = useLoginOrganizationMutation();
-  
+  const { data:allVolunteers } = useGetAllVolunteersQuery()
+  const { data: allOrganizations } = useGetAllOrganizationsQuery();
   const isLoading = isLoadingVolunteer || isLoadingOrganization;
   
 
+  
   const handleLogin = async () => {
-    console.log(userMode);
-    
     setError(null);
     setSuccess(false);
     try {
@@ -45,14 +48,32 @@ const SignIn = () => {
         setError("יש לבחור מצב משתמש (מתנדב או ארגון)");
         return;
       }
-
+  
       const { accessToken } = response;
-      localStorage.setItem('token', accessToken);
+      localStorage.setItem("token", accessToken);
+  
+      const decoded = jwtDecode<{ email: string }>(accessToken);
+      let fullUser;
+  
+      if (userMode === "Volunteer" && allVolunteers!=null) {
+        console.log(allVolunteers+" userMode === Volunteer && allVolunteers!=null");
 
-      const userData = jwtDecode<Volunteer | Organization>(accessToken);
-      localStorage.setItem("user", JSON.stringify(userData));
+        fullUser = allVolunteers.find((v) => v.email === decoded.email);
+      } else if (userMode === "Organization" && allOrganizations) {
+        console.log(allOrganizations+" userMode === Volunteer && allOrganizations!=null");
+
+
+        fullUser = allOrganizations.find((o) => o.email === decoded.email);
+      }
+  
+      if (!fullUser) {
+        setError("המשתמש לא נמצא במסד הנתונים.");
+        return;
+      }
+  
+      dispatch(setCurrentUser(fullUser));
+      localStorage.setItem("user", JSON.stringify(fullUser));
       localStorage.setItem("userMode", JSON.stringify(userMode));
-      dispatch(setCurrentUser(userData));
       
       setSuccess(true);
       navigate("/");
@@ -60,6 +81,7 @@ const SignIn = () => {
       setError(err?.data?.message || "שגיאה בהתחברות");
     }
   };
+  
 
   return (
     <Container maxWidth="sm">

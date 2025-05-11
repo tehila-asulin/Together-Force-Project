@@ -24,12 +24,12 @@ exports.deleteOrganization = async (req, res) => {
 
 exports.updateOrganization = async (req, res) => {
   const {id} = req.params;
-  const { name,email,  phone, history, image, password, AssociationNumber} = req.body;
+  const { name,email,  phone, history, image, password, organizationNumber} = req.body;
 
   try {
-    const updateOrganization = await User.findOneAndUpdate(
+    const updateOrganization = await Organization.findOneAndUpdate(
       {_id: id }, 
-      {name,email,  phone, history, image, password, AssociationNumber},
+      {name,email,  phone, history, image, password, organizationNumber},
       { new: true }
     );
 
