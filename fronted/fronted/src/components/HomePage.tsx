@@ -4,16 +4,19 @@ import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser, selectUserMode } from "../redux/slices/togetherForceSlice";
 import VolunteeringCard from "./VolunteeringCard";
+import VolunteeringList from "./VolunteeringList";
+import { UserModes } from "../interface/UserModes";
 
 const HomePage = () => {
   const userMode = useSelector(selectUserMode);
 
   return (
     <>
+      <VolunteeringList></VolunteeringList>
       {console.log(userMode)}
       {console.log("ll")}
 
-      {userMode === "Organization" ? (
+      {userMode === UserModes.Organization ? (
         <Button
           component={Link}
           to="/addVolunteering"
@@ -23,16 +26,9 @@ const HomePage = () => {
           לבקשת התנדבות חדשה
         </Button>
       ) : (
-        <Button
-          component={Link}
-          to="/addVolunteering"
-          variant="contained"
-          sx={{ backgroundColor: "white", color: "black", minWidth: "80px" }}
-        >
-          התנדבויות
-        </Button>
+        <VolunteeringList></VolunteeringList>
       )}
-              <VolunteeringCard></VolunteeringCard>
+            
 
     </>
   );

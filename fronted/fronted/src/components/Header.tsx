@@ -36,10 +36,9 @@ const Header = () => {
     setSigninAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (mode?: keyof UserModes) => {
+  const handleClose = (mode?: UserModes) =>{
     if (mode) {
       console.log(mode);
-      
       dispatch(setUserMode(mode));
     }
     setSignupAnchorEl(null);
@@ -51,7 +50,7 @@ const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userMode");
     dispatch(setCurrentUser(null))
-    dispatch(setUserMode("None"))
+    dispatch(setUserMode(UserModes.None))
     navigate("/");
   };
 
@@ -80,7 +79,12 @@ const Header = () => {
               <Typography sx={{ color: "white" }}>{currentUser.name}</Typography>
               <Tooltip title="Logout">
                 <IconButton onClick={handleLogout}>
-                  <Avatar alt={currentUser.name} src={currentUser.profileImage || "/static/images/avatar/2.jpg"} sx={{ width: 36, height: 36 }} />
+                 <Avatar
+  alt={currentUser.name}
+  src={currentUser.profileImage ? currentUser.profileImage: "/static/images/avatar/2.jpg"}
+  sx={{ width: 36, height: 36 }}
+/>
+
                 </IconButton>
               </Tooltip>
             </>
@@ -90,16 +94,16 @@ const Header = () => {
                 Sign In
               </Button>
               <Menu anchorEl={signinAnchorEl} open={signinOpen} onClose={() => handleClose()}>
-                <MenuItem component={Link} to="/signin/volunteer" onClick={() => handleClose("Volunteer")}>Volunteer</MenuItem>
-                <MenuItem component={Link} to="/signin/organization" onClick={() => handleClose("Organization")}>Organization</MenuItem>
+                <MenuItem component={Link} to="/signin/volunteer" onClick={() => handleClose(UserModes.Volunteer)}>Volunteer</MenuItem>
+                <MenuItem component={Link} to="/signin/organization" onClick={() => handleClose(UserModes.Organization)}>Organization</MenuItem>
               </Menu>
 
               <Button variant="contained" sx={{ backgroundColor: "white", color: "black", minWidth: "80px" }} onClick={handleSignupClick}>
                 Sign Up
               </Button>
               <Menu anchorEl={signupAnchorEl} open={signupOpen} onClose={() => handleClose()}>
-                <MenuItem component={Link} to="/signup/volunteer" onClick={() => handleClose("Volunteer")}>Volunteer</MenuItem>
-                <MenuItem component={Link} to="/signup/organization" onClick={() => handleClose("Organization")}>Organization</MenuItem>
+                <MenuItem component={Link} to="/signup/volunteer" onClick={() => handleClose(UserModes.Volunteer)}>Volunteer</MenuItem>
+                <MenuItem component={Link} to="/signup/organization" onClick={() => handleClose(UserModes.Organization)}>Organization</MenuItem>
               </Menu>
             </>
           )}

@@ -17,6 +17,7 @@ import {useEditOrganizationMutation} from "../redux/slices/api/organizationApiSl
 import { selectCurrentUser} from "../redux/slices/togetherForceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Organization } from '../interface/Organization'; 
+import {Volunteering} from "../interface/Volunteering"
 const VolunteeringForm = () => {
   const {
     reset,
@@ -69,31 +70,27 @@ const VolunteeringForm = () => {
   //   }
   // };
   
-  
 const onSubmit = async (data: any) => {
   try {
     console.log("Form Data:", data);
 
-    // 1. שמירה של ההתנדבות
-    const res = await createNewVolunteering(data).unwrap();  // unwrap מחלץ את המידע מהתגובה
-    console.log(res);
+    let updatedVo: Volunteering;
 
-    // 2. עדכון ההיסטוריה רק אחרי שיצירה הצליחה
     if (currentUser && 'organizationNumber' in currentUser) {
-      const updatedOrg: Organization = {
-        ...currentUser,
-        history: [...(currentUser.history ?? []), res], // מוסיפה את ההתנדבות החדשה לסוף ההיסטוריה
+      updatedVo = {
+        ...data,
+        byOrganizationNumber: currentUser.organizationNumber,
       };
-      await updateOrganization(updatedOrg);
-      
+    } else {
+      throw new Error("Missing organizationNumber");
     }
 
+    const res = await createNewVolunteering(updatedVo).unwrap();
     reset();
   } catch (error) {
     console.error("Error adding volunteering:", error);
   }
-};
-
+}
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);

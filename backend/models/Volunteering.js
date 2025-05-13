@@ -9,6 +9,8 @@ const volunteeringSchema = new mongoose.Schema({
   isDone:Boolean,
   feedback:Number,
   idMaker:String,
+  byOrganizationNumber: Number,
+  madeByVolunteerEmail: String,
 
 });
 module.exports = mongoose.model('Volunteering', volunteeringSchema);

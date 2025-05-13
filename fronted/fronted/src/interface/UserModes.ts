@@ -1,5 +1,5 @@
-export interface UserModes {
-    Volunteer: String;
-    Organization: String;
-    None: String;
-}
+export enum UserModes {
+    Volunteer = "Volunteer",
+    Organization = "Organization",
+    None = "None"
+  }

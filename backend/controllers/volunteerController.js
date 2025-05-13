@@ -1,10 +1,36 @@
 const Volunteer = require('../models/Volunteer');
 
 
+// exports.addVolunteer = async (req, res) => {
+//     const volunteer = await Volunteer.create(req.body);
+//     res.json(volunteer)
+// };
+
 exports.addVolunteer = async (req, res) => {
-    const volunteer = await Volunteer.create(req.body);
-    res.json(volunteer)
+  try {
+    const { name, email, phone, selectedVolunteerOptions, selectedCities, idNumber, password } = req.body;
+
+    const profileImage = req.file ? req.file.path : '';
+
+    const newVolunteer = new Volunteer({
+      name,
+      email,
+      phone,
+      selectedVolunteerOptions,
+      selectedCities,
+      idNumber,
+      password,
+      profileImage,
+    });
+
+    await newVolunteer.save();
+
+    res.status(201).json(newVolunteer);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
 };
+
 
 exports.deleteVolunteer = async (req, res) => {
   const  {id} = req.params
