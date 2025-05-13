@@ -8,7 +8,9 @@ interface VolunteerCredentials {
 
 const volunteerApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    loginVolunteer: builder.mutation<{ accessToken: string }, VolunteerCredentials>({
+    loginVolunteer: builder.mutation<{
+      user: any; accessToken: string 
+}, VolunteerCredentials>({
       query: (credentials) => ({
         url: "auth/loginV",
         method: "POST",

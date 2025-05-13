@@ -1,17 +1,21 @@
 import apiSlice from './apiSlice';
+import { Volunteering } from '../../../interface/Volunteering'
+// ממשק לנתוני התנדבות
+
 
 const volunteeringApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-   
-    getAllVolunteering: builder.query({
+    getAllVolunteering: builder.query<Volunteering[], void>({
       query: () => "/volunteeringRoutes/allVolunteering",
       providesTags: ["TogetherForce"]
     }),
-    getVolunteeringById: builder.query({
-      query: (id) =>`volunteeringRoutes/${id}`,
+
+    getVolunteeringById: builder.query<Volunteering, string>({
+      query: (id) => `volunteeringRoutes/${id}`,
       providesTags: ["TogetherForce"]
     }),
-    createVolunteering: builder.mutation({
+
+    createVolunteering: builder.mutation<Volunteering, Partial<Volunteering>>({
       query: (newVolunteer) => ({
         url: "volunteeringRoutes/addVolunteering",
         method: "POST",
@@ -19,7 +23,8 @@ const volunteeringApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["TogetherForce"]
     }),
-    editVolunteering: builder.mutation({
+
+    editVolunteering: builder.mutation<Volunteering, Volunteering>({
       query: (updatedVolunteer) => ({
         url: `/volunteeringRoutes/${updatedVolunteer._id}`,
         method: "PUT",
@@ -27,7 +32,8 @@ const volunteeringApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["TogetherForce"]
     }),
-    removeVolunteering: builder.mutation({
+
+    removeVolunteering: builder.mutation<{ message: string }, string>({
       query: (id) => ({
         url: `/volunteeringRoutes/${id}`,
         method: "DELETE"
@@ -47,5 +53,3 @@ export const {
 } = volunteeringApiSlice;
 
 export default volunteeringApiSlice;
-
-

@@ -7,7 +7,9 @@ const profileOrganizationSchema = z.object({
     .min(10, "מספר טלפון לא תקין")
     .max(10, "מספר טלפון לא תקין"),
   email: z.string().email("כתובת אימייל לא תקינה"),
-  profileImage: z.string(),
+  //profileImage: z.string(),
+  profileImage: z.any().optional(),
+
   password: z.string()
     .min(8, "הסיסמה חייבת להכיל לפחות 8 תווים")
     .regex(/[A-Z]/, "הסיסמה חייבת להכיל לפחות אות גדולה אחת")
