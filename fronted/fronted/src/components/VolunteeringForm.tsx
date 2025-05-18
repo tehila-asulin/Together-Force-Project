@@ -70,6 +70,25 @@ const VolunteeringForm = () => {
   //   }
   // };
   
+  
+// const onSubmit = async (data: any) => {
+//   try {
+//     console.log("Form Data:", data);
+
+    
+//     if (currentUser && 'organizationNumber' in currentUser)  {
+//      const updatedVo: Volunteering = {
+//         ...data,
+//         byOrganizationNumber: currentUser.organizationNumber,
+//    };
+// }
+
+//     const res = await createNewVolunteering(updatedVo).unwrap();  // unwrap מחלץ את המידע מהתגובה
+//     reset();
+//   } catch (error) {
+//     console.error("Error adding volunteering:", error);
+//   }
+// };
 const onSubmit = async (data: any) => {
   try {
     console.log("Form Data:", data);
@@ -91,6 +110,8 @@ const onSubmit = async (data: any) => {
     console.error("Error adding volunteering:", error);
   }
 }
+
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);

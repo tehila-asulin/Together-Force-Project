@@ -32,20 +32,41 @@ const SingUpVolunteer=() =>{
    const [createNewVolunteer]=useCreateVolunteerMutation()
 
   const selectedCities = watch("selectedCities");
-  const profileImage = watch("profileImage");
+    const profileImage = watch("profileImage");
 
-  const onSubmit = (data: any) => {
-    try{
-      console.log("Form Data:", data);
-      createNewVolunteer(data)
-      reset();
+  // const onSubmit = (data: any) => {
+  //   try{
+  //     console.log("Form Data:", data);
+  //     createNewVolunteer(data)
+  //     reset();
 
-    }
-    catch{
-    console.log("error to add volunteer");
-    }
+  //   }
+  //   catch{
+  //   console.log("error to add volunteer");
+  //   }
 
-  };
+  // };
+  const onSubmit = async (data: any) => {
+        try {
+            const formData = new FormData();
+            formData.append("name", data.name);
+            formData.append("email", data.email);
+            formData.append("selectedVolunteerOptions", data.selectedVolunteerOptions);
+            formData.append("phone", data.phone);
+            formData.append("history", data.history);
+            formData.append("idNumber", data.idNumber);
+            formData.append("password", data.password);
+            formData.append("selectedCities", data.selectedCities);
+            if (data.profileImage instanceof File) {
+                formData.append("profileImage", data.profileImage);
+            }
+
+            await createNewVolunteer(formData);  
+            reset();
+        } catch (error) {
+            console.error("Error adding Volunteer:", error);
+        }
+    };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -64,38 +85,37 @@ const SingUpVolunteer=() =>{
             <Divider />
             <Stack spacing={2}>
               {/* העלאת תמונת פרופיל */}
-              <Box sx={styles.avatarBox}>
-                <Avatar src={profileImage || "/default-avatar.png"} sx={styles.avatar} />
-                <Controller
-                  name="profileImage"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(event) => {
-                          const file = event.target.files?.[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              field.onChange(reader.result); 
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                        style={styles.uploadButton}
-                        id="profile-upload"
-                      />
-                      <label htmlFor="profile-upload">
-                        <Button component="span" variant="outlined" size="sm">
-                          Upload Image
-                        </Button>
-                      </label>
-                    </>
-                  )}
-                />
-              </Box>
+                            <Box sx={styles.avatarBox}>
+                                <Avatar
+                                    src={profileImage instanceof File ? URL.createObjectURL(profileImage) : "/default-avatar.png"}
+                                    sx={styles.avatar}
+                                />
+                                <Controller
+                                    name="profileImage"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(event) => {
+                                                    const file = event.target.files?.[0];
+                                                    if (file) {
+                                                        field.onChange(file); // קובץ אמיתי
+                                                    }
+                                                }}
+                                                style={styles.uploadButton}
+                                                id="profile-upload"
+                                            />
+                                            <label htmlFor="profile-upload">
+                                                <Button component="span" variant="outlined" size="sm">
+                                                    Upload Image
+                                                </Button>
+                                            </label>
+                                        </>
+                                    )}
+                                />
+                            </Box>
 
               <Controller 
                 name="name"

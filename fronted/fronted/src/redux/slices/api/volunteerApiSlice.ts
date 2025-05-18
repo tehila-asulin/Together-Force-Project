@@ -31,7 +31,7 @@ const volunteerApiSlice = apiSlice.injectEndpoints({
       providesTags: ["TogetherForce"]
     }),
 
-    createVolunteer: builder.mutation<Volunteer, Volunteer>({
+    createVolunteer: builder.mutation<any, FormData>({
       query: (newVolunteer) => ({
         url: "auth/registerV",
         method: "POST",

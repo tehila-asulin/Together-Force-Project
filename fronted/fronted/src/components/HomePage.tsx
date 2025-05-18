@@ -1,9 +1,8 @@
 import React from "react";
 import { Button } from "@mui/material";
-import { Link } from "react-router"; 
-import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUser, selectUserMode } from "../redux/slices/togetherForceSlice";
-import VolunteeringCard from "./VolunteeringCard";
+import { Link } from "react-router"; // ✅ תיקון חשוב
+import { useSelector } from "react-redux";
+import { selectUserMode } from "../redux/slices/togetherForceSlice";
 import VolunteeringList from "./VolunteeringList";
 import { UserModes } from "../interface/UserModes";
 
@@ -12,25 +11,20 @@ const HomePage = () => {
 
   return (
     <>
-      <VolunteeringList></VolunteeringList>
-      {console.log(userMode)}
-      {console.log("ll")}
-
-      {userMode === UserModes.Organization ? (
+      {userMode === UserModes.Organization && (
         <Button
           component={Link}
           to="/addVolunteering"
           variant="contained"
           sx={{ backgroundColor: "white", color: "black", minWidth: "80px" }}
         >
-          לבקשת התנדבות חדשה
+          בקשת התנדבות חדשה
         </Button>
-      ) : (
-        <VolunteeringList></VolunteeringList>
       )}
-            
-
+      
+      <VolunteeringList />
     </>
+
   );
 };
 

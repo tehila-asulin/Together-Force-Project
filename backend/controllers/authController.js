@@ -751,13 +751,13 @@ const registerV = async (req, res) => {
       name,
       email,
       phone,
-      profileImage,
       idNumber,
       selectedVolunteerOptions,
       selectedCities,
       history,
       password
     } = req.body;
+console.log(selectedCities);
 
     if (!name || !password) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -767,14 +767,26 @@ const registerV = async (req, res) => {
     if (duplicate) {
       return res.status(409).json({ message: "Duplicate Volunteer email" });
     }
-
+    let profileImageUrl = "";
+    if (req.files && req.files.profileImage) {
+        try {
+            // העלאת התמונה ל-Cloudinary
+            const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
+                folder: "volunteers"
+            });
+            profileImageUrl = result.secure_url; // שומרים את ה-URL המלא
+        } catch (err) {
+            console.error("Cloudinary upload error:", err);
+            return res.status(500).json({ message: "Error uploading image to Cloudinary" });
+        }
+    }
     const hashedPwd = await bcrypt.hash(password, 10);
 
     const volunteerObject = {
       name,
       email,
       phone,
-      profileImage,
+      profileImage: profileImageUrl,
       idNumber,
       selectedVolunteerOptions,
       selectedCities,
