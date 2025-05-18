@@ -20,14 +20,7 @@ const organizationSchema = new mongoose.Schema({
   phone: String,
   profileImage: String,
   password: String,
-  organizationNumber: Number,
-  history: [{
-    title: String,
-    description: String,
-    origin: [String],
-    phone: String,
-    isDone: Boolean
-  }]
+  organizationNumber: Number
 });
 
 module.exports = mongoose.model('Organization', organizationSchema);

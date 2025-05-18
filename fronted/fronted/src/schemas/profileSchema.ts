@@ -14,7 +14,7 @@ const profileSchema = z.object({
   selectedVolunteerOptions: z
     .array(z.string())
     .min(1, "יש לבחור לפחות תחום התנדבות אחד"),
-    profileImage: z.string(),
+    profileImage: z.any().optional(),
     password: z.string()
     .min(8, "הסיסמה חייבת להכיל לפחות 8 תווים")
     .regex(/[A-Z]/, "הסיסמה חייבת להכיל לפחות אות גדולה אחת")

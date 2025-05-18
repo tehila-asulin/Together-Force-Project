@@ -7,7 +7,7 @@ const volunteerSchema = new mongoose.Schema({
     selectedCities: { type: [String], default: [] }, // מערך של מחרוזות
     phone: { type: String, required: true },
     history: { type: [String], default: [] }, // היסטוריה - רשימה של מחרוזות
-    profileImage: { type: String },
+    profileImage: String ,
     idNumber:{ type: String, required: true, unique: true },
     password: { type: String, required: true }
 });
