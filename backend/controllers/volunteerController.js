@@ -53,7 +53,7 @@ exports.updateVolunteer = async (req, res) => {
   const {name,	email,Skills,Origin,phone,history,image} = req.body;
 
   try {
-    const updatedVolunteer = await User.findOneAndUpdate(
+    const updatedVolunteer = await Volunteer.findOneAndUpdate(
       {_id: id }, 
       {name,	email,Skills,Origin,phone,history,image },
       { new: true }

@@ -351,7 +351,7 @@ const SingUpVolunteer = () => {
       formData.append("phone", data.phone);
       formData.append("idNumber", data.idNumber);
       formData.append("password", data.password);
-      formData.append("selectedCities", data.selectedCities);
+      formData.append("selectedCities",  JSON.stringify(data.selectedCities));
       if (data.profileImage instanceof File) {
         formData.append("profileImage", data.profileImage);
       }

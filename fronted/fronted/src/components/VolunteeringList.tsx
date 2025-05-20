@@ -23,10 +23,12 @@ const VolunteeringList = () => {
   if (isLoading) return <p>טוען נתונים...</p>;
   if (isError) return <p>אירעה שגיאה: {(error as any)?.message || 'שגיאה לא ידועה'}</p>;
 
+
   return (
+    
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
       {filteredVolunteering?.map((v: Volunteering) => (
-        <VolunteeringCard key={v._id} v={v} />
+        <VolunteeringCard key={v._id} volunteering={v} />
       ))}
     </div>
   );

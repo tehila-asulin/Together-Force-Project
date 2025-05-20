@@ -3,6 +3,10 @@ const Volunteering = require('../models/Volunteering');
 exports.getFilteredVolunteering = async (req, res) => {
   const { organizationNumber, selectedCities = [], selectedOptions = [] } = req.body;
 
+  console.log("selectedCities:", selectedCities);
+ console.log("selectedOptions:", selectedOptions);
+
+  
   try {
     let filter = {};
 
@@ -10,7 +14,7 @@ exports.getFilteredVolunteering = async (req, res) => {
       filter.byOrganizationNumber = organizationNumber;
     } else {
       if (selectedCities.length > 0) {
-        filter.origin = { $elemMatch: { $in: selectedCities } };
+        filter.origin = { $in: selectedCities };
       }
       if (selectedOptions.length > 0) {
         filter.title = { $in: selectedOptions };
@@ -24,6 +28,7 @@ exports.getFilteredVolunteering = async (req, res) => {
     res.status(500).json({ message: 'Filtering failed' });
   }
 };
+
 
 exports.addVolunteering = async (req, res) => {
     const volunteering = await Volunteering.create(req.body);
@@ -48,12 +53,12 @@ exports.deleteVolunteeing = async (req, res) => {
 
 exports.updateVolunteering = async (req, res) => {
   const {id} = req.params;
-  const { title,description, skills,origin,phone,isDone,feedback,idMaker} = req.body;
+  const { title,description, skills,origin,phone,status,feedback,idMaker} = req.body;
 
   try {
-    const updatedVolunteering = await User.findOneAndUpdate(
+    const updatedVolunteering = await Volunteering.findOneAndUpdate(
       {_id: id }, 
-      {title,description, skills,origin,phone,isDone,feedback,idMaker},
+      {title,description, skills,origin,phone,feedback,idMaker,status},
       { new: true }
     );
 

@@ -1,6 +1,5 @@
 export enum statusV {
-    PENDING,
-    IN_PROGRESS,
-    COMPLETED,
-    CANCELED
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED'
 }

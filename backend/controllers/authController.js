@@ -765,13 +765,12 @@ const registerV = async (req, res) => {
       email,
       phone,
       idNumber,
-      selectedCities,
       history,
       password
     } = req.body;
-console.log(selectedCities);
 
 const selectedVolunteerOptions = JSON.parse(req.body.selectedVolunteerOptions);
+const selectedCities = JSON.parse(req.body.selectedCities);
     if (!name || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
