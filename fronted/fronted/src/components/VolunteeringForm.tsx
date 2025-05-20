@@ -1,10 +1,14 @@
 import * as React from "react";
 import {
-  Box, Divider, Stack, Typography, Card, CardActions, CardOverflow,
-  Checkbox, List, ListItem, Sheet, Avatar
+  Box,
+  Divider,
+  Stack,
+  Typography,
+  Card,
+  CardActions,
+  CardOverflow,
+  Sheet,
 } from "@mui/joy";
-import { Done } from "@mui/icons-material";
-import { TextField, FormControlLabel, RadioGroup, Radio } from "@mui/material";
 import Button from "@mui/joy/Button";
 import { Controller, useForm } from "react-hook-form";
 import { styles } from "../styles/style";
@@ -12,110 +16,60 @@ import volunteerCategories from "../../public/volunteerCategories.json";
 import AddVolunteeringSchema from "../schemas/AddVolunteeringSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import cities from "../../public/dataCities.json";
-import { useCreateVolunteeringMutation } from '../redux/slices/api/volunteeringApiSlice';
-import {useEditOrganizationMutation} from "../redux/slices/api/organizationApiSlice"
-import { selectCurrentUser} from "../redux/slices/togetherForceSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { Organization } from '../interface/Organization'; 
-import {Volunteering} from "../interface/Volunteering"
+import { useCreateVolunteeringMutation } from "../redux/slices/api/volunteeringApiSlice";
+import { useEditOrganizationMutation } from "../redux/slices/api/organizationApiSlice";
+import { selectCurrentUser } from "../redux/slices/togetherForceSlice";
+import { useSelector } from "react-redux";
+import { Volunteering } from "../interface/Volunteering";
+import { TextField, Autocomplete } from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
 const VolunteeringForm = () => {
   const {
     reset,
     handleSubmit,
     watch,
     control,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     mode: "onBlur",
     resolver: zodResolver(AddVolunteeringSchema),
     defaultValues: {
       title: "",
       description: "",
-      origin: [],
+      origin: "", // עיר אחת בלבד - מחרוזת
       phone: "",
-      isDone: false
-    }
+      isDone: false,
+      deadline: undefined,
+    },
   });
 
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [showMenu, setShowMenu] = React.useState(false);
   const [createNewVolunteering] = useCreateVolunteeringMutation();
-  const [updateOrganization]=useEditOrganizationMutation()
+  const [updateOrganization] = useEditOrganizationMutation();
   const currentUser = useSelector(selectCurrentUser);
 
-  const selectedCities = watch("origin");
+  const onSubmit = async (data: any) => {
+    try {
+      console.log("Form Data:", data);
 
-  // const onSubmit = (data: any) => {
-  //   try {
-  //     console.log("Form Data:", data);
-  //     createNewVolunteering(data);
-  
-  //     if (currentUser && 'organizationNumber' in currentUser) {
-  //       console.log("iiii");
-  //       const updatedOrg = {
-  //         ...currentUser,
-  //         history: [...(currentUser.history || []), data],
-         
-          
-  //       };
-  //       console.log(updatedOrg);
-  //       updateOrganization(updatedOrg as Organization); 
-  //       console.log(updatedOrg);
+      let updatedVo: Volunteering;
 
-  //     }
-  
-  //     reset();
-  //   } catch (error) {
-  //     console.error("Error adding volunteering:", error);
-  //   }
-  // };
-  
-  
-// const onSubmit = async (data: any) => {
-//   try {
-//     console.log("Form Data:", data);
+      if (currentUser && "organizationNumber" in currentUser) {
+        updatedVo = {
+          ...data,
+          byOrganizationNumber: currentUser.organizationNumber,
+        };
+      } else {
+        throw new Error("Missing organizationNumber");
+      }
 
-    
-//     if (currentUser && 'organizationNumber' in currentUser)  {
-//      const updatedVo: Volunteering = {
-//         ...data,
-//         byOrganizationNumber: currentUser.organizationNumber,
-//    };
-// }
-
-//     const res = await createNewVolunteering(updatedVo).unwrap();  // unwrap מחלץ את המידע מהתגובה
-//     reset();
-//   } catch (error) {
-//     console.error("Error adding volunteering:", error);
-//   }
-// };
-const onSubmit = async (data: any) => {
-  try {
-    console.log("Form Data:", data);
-
-    let updatedVo: Volunteering;
-
-    if (currentUser && 'organizationNumber' in currentUser) {
-      updatedVo = {
-        ...data,
-        byOrganizationNumber: currentUser.organizationNumber,
-      };
-    } else {
-      throw new Error("Missing organizationNumber");
+      const res = await createNewVolunteering(updatedVo).unwrap();
+      reset();
+    } catch (error) {
+      console.error("Error adding volunteering:", error);
     }
-
-    const res = await createNewVolunteering(updatedVo).unwrap();
-    reset();
-  } catch (error) {
-    console.error("Error adding volunteering:", error);
-  }
-}
-
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setShowMenu(value.length > 0);
   };
 
   return (
@@ -128,90 +82,65 @@ const onSubmit = async (data: any) => {
             </Box>
             <Divider />
 
-            {/* בחירת אפשרות התנדבות אחת בלבד */}
+            {/* בחירת תחום התנדבות */}
             <Box sx={{ width: 400 }}>
               <Typography level="h4" sx={styles.titleVolunteerOptions}>
                 אפשרויות התנדבות
               </Typography>
-              {errors.title && <Typography color="danger">{errors.title.message}</Typography>}
+              {errors.title && (
+                <Typography color="danger">{errors.title.message}</Typography>
+              )}
               <Controller
                 name="title"
                 control={control}
+                defaultValue=""
                 render={({ field }) => (
-                  <RadioGroup {...field}>
-                    {Object.entries(volunteerCategories).map(([category, options]) => (
-                      <Box key={category} sx={styles.categoryBox}>
-                        <Typography level="body-sm" sx={styles.categoryTitle}>
-                          {category}
-                        </Typography>
-                        <List orientation="horizontal" wrap sx={styles.listItems}>
-                          {options.map((option, index) => (
-                            <ListItem key={index}>
-                              <FormControlLabel
-                                control={<Radio />}
-                                label={option.name}
-                                value={option.name}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </Box>
-                    ))}
-                  </RadioGroup>
+                  <Autocomplete
+                    options={Object.values(volunteerCategories)}
+                    value={field.value || null}
+                    onChange={(_, newValue) => field.onChange(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="בחר תחום התנדבות"
+                        error={!!errors.title}
+                        helperText={errors.title?.message}
+                      />
+                    )}
+                  />
                 )}
               />
             </Box>
 
-            {/* ערים */}
-            <Sheet variant="outlined" sx={styles.sheet}>
-              <Box sx={styles.headerWithSearch}>
-                <Typography id="cities" level="body-sm" sx={styles.title}>
-                  בחירת עיר
-                </Typography>
-                <TextField
-                  placeholder="חפש עיר..."
-                  variant="outlined"
-                  size="small"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  sx={styles.searchField}
-                />
-              </Box>
+            {/* בחירת עיר - באמצעות Autocomplete */}
+            <Sheet variant="outlined" sx={{ mt: 3, p: 2 }}>
+              <Typography level="body-sm" sx={styles.title}>
+                בחירת עיר
+              </Typography>
 
-              {errors.origin && <Typography color="danger">{errors.origin.message}</Typography>}
-
-              {showMenu && (
-                <List sx={styles.list}>
-                  {cities
-                    .filter((city) => city.name.includes(searchTerm))
-                    .map((city, index) => (
-                      <ListItem key={index}>
-                        {selectedCities.includes(city.name) && (
-                          <Done color="primary" sx={styles.doneIcon} />
-                        )}
-                        <Controller
-                          name="origin"
-                          control={control}
-                          render={({ field }) => (
-                            <Checkbox
-                              size="sm"
-                              disableIcon
-                              overlay
-                              label={city.name}
-                              checked={field.value.includes(city.name)}
-                              onChange={(event) => {
-                                const newSelected = event.target.checked
-                                  ? [...field.value, city.name]
-                                  : field.value.filter((name) => name !== city.name);
-                                field.onChange(newSelected);
-                              }}
-                            />
-                          )}
-                        />
-                      </ListItem>
-                    ))}
-                </List>
-              )}
+              <Controller
+                name="origin"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Autocomplete
+                    options={cities.map((city) => city.name)}
+                    value={field.value ?? undefined}
+                    onChange={(_, newValue) => field.onChange(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="בחר עיר"
+                        error={!!errors.origin}
+                        helperText={errors.origin?.message}
+                        size="small"
+                      />
+                    )}
+                    disableClearable
+                    clearOnEscape
+                  />
+                )}
+              />
             </Sheet>
 
             {/* תיאור (לא חובה) */}
@@ -245,7 +174,30 @@ const onSubmit = async (data: any) => {
                 />
               )}
             />
-        
+
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Controller
+                name="deadline"
+                control={control}
+                render={({ field }) => (
+                  <DateTimePicker
+                    {...field}
+                    label="תאריך ושעת דדליין"
+                    value={field.value || null}
+                    onChange={(newValue) => field.onChange(newValue)}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        margin: "normal",
+                        error: !!errors.deadline,
+                        helperText: errors.deadline?.message,
+                      },
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+
             <CardOverflow sx={styles.cardOverflow}>
               <CardActions sx={styles.cardActions}>
                 <Button type="submit" size="sm" variant="solid">

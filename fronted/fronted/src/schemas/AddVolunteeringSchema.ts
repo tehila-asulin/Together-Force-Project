@@ -5,9 +5,7 @@ const AddVolunteeringSchema = z.object({
 
   description: z.string().optional(), // לא חובה
 
-  origin: z
-    .array(z.string())
-    .min(1, "יש לבחור לפחות עיר אחת"), // לפחות עיר אחת
+ origin: z.string().nonempty("יש לבחור עיר אחת"),
 
   phone: z
     .string()
@@ -16,7 +14,14 @@ const AddVolunteeringSchema = z.object({
   isDone: z.boolean({
     required_error: "יש לבחור אם המשימה הושלמה או לא",
   }),
-
+deadline: z
+  .date({
+    required_error: "יש להזין תאריך יעד",
+    invalid_type_error: "התאריך אינו תקין",
+  })
+  .refine((date) => date >= new Date(), {
+    message: "התאריך חייב להיות מהזמן הנוכחי והלאה",
+  }),
 });
 
 export default AddVolunteeringSchema;

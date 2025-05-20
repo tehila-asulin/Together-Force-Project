@@ -5,6 +5,15 @@ import { Volunteering } from '../../../interface/Volunteering'
 
 const volunteeringApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getFilteredVolunteering: builder.query<Volunteering[], any>({
+   query: (params) => ({
+    url: '/volunteeringRoutes/filtered',
+    method: 'POST',
+    body: params,
+  }),
+  providesTags: ['TogetherForce'],
+}),
+
     getAllVolunteering: builder.query<Volunteering[], void>({
       query: () => "/volunteeringRoutes/allVolunteering",
       providesTags: ["TogetherForce"]
@@ -49,7 +58,8 @@ export const {
   useGetVolunteeringByIdQuery, 
   useCreateVolunteeringMutation, 
   useEditVolunteeringMutation, 
-  useRemoveVolunteeringMutation 
+  useRemoveVolunteeringMutation,
+  useGetFilteredVolunteeringQuery 
 } = volunteeringApiSlice;
 
 export default volunteeringApiSlice;

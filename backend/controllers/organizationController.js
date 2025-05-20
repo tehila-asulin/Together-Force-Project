@@ -52,12 +52,27 @@ exports.getAllOrganizations = async (req, res) => {
       res.status(500).json({ message: 'Failed to get organizations' });
     }
   };
-  exports.getOrganizationById = async (req, res) => {
+  // exports.getOrganizationById = async (req, res) => {
+  //   const { id } = req.params;
+  //   console.log(id)
+  
+  //   try {
+  //     const organization = await Organization.findOne({ _id: id });
+  //     if (!organization) {
+  //       return res.status(404).json({ message: 'Organization not found' });
+  //     }
+  //     res.json(organization);
+  //   } catch (error) {
+  //     console.error('Failed to get organization:', error);
+  //     res.status(500).json({ message: 'Failed to get organization' });
+  //   }
+  // };
+  exports.getOrganizationByNumber = async (req, res) => {
     const { id } = req.params;
     console.log(id)
   
     try {
-      const organization = await Organization.findOne({ _id: id });
+      const organization = await Organization.findOne({ organizationNumber: id });
       if (!organization) {
         return res.status(404).json({ message: 'Organization not found' });
       }

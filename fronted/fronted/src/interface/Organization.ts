@@ -1,11 +1,10 @@
 export interface Organization {
-    _id?: string; 
+    _id: string; 
     name: string;
     email: string;
     phone: string;
-    history:any[];
-    profileImage: string;
-    password?: string; 
+    profileImage?: string;
+    password: string; 
     organizationNumber: number;
   }
   
