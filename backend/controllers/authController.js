@@ -723,7 +723,7 @@ const register = async (req, res) => {
     }
 
     const hashedPwd = await bcrypt.hash(password, 10);
-
+   
     const organizationObject = {
         name,
         email,
@@ -732,10 +732,23 @@ const register = async (req, res) => {
         password: hashedPwd,
         organizationNumber
     };
-
+    const organization = await Organization.create(organizationObject);
     try {
-        const organization = await Organization.create(organizationObject);
-        return res.status(201).json({ message: `New Organization ${organization.name} created` });
+        if(organization)
+        {
+          const organizationInfo = {
+      _id:organization._id,
+      name: organization.name,
+      email: organization.email,
+      phone: organization.phone,
+      profileImage: organization.profileImage,
+      organizationNumber: organization.organizationNumber,
+      history: organization.history,
+    };
+      const accessToken=jwt.sign(organizationInfo,process.env.ACCESS_TOKEN_SECRET)
+      return res.status(201).json({accessToken:accessToken, organization:organizationInfo})
+        }
+           
     } catch (err) {
         console.error("DB Save Error:", err);
         return res.status(400).json({ message: 'Invalid Organization received' });
@@ -752,13 +765,13 @@ const registerV = async (req, res) => {
       email,
       phone,
       idNumber,
-      selectedVolunteerOptions,
       selectedCities,
       history,
       password
     } = req.body;
 console.log(selectedCities);
 
+const selectedVolunteerOptions = JSON.parse(req.body.selectedVolunteerOptions);
     if (!name || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
@@ -795,9 +808,22 @@ console.log(selectedCities);
     };
 
     const volunteer = await Volunteer.create(volunteerObject);
-
+ 
     if (volunteer) {
-      return res.status(201).json({ message: `New Volunteer ${volunteer.name} created` });
+      const volunteerInfo = {
+        _id:volunteer._id,
+      name: volunteer.name,
+      email: volunteer.email,
+      phone: volunteer.phone,
+      profileImage: volunteer.profileImage,
+      idNumber: volunteer.idNumber,
+      selectedVolunteerOptions: volunteer.selectedVolunteerOptions,
+      selectedCities: volunteer.selectedCities,
+      history: volunteer.history,
+      
+    };
+     const accessToken=jwt.sign(volunteerInfo,process.env.ACCESS_TOKEN_SECRET)
+      return res.status(201).json({accessToken:accessToken, volunteer:volunteerInfo})
     } else {
       return res.status(400).json({ message: 'Invalid Volunteer received' });
     }
@@ -838,12 +864,15 @@ const loginV = async (req, res) => {
     };
 
     const accessToken = jwt.sign(volunteerInfo, process.env.ACCESS_TOKEN_SECRET);
-    res.json({ accessToken, user: foundVolunteer });
+    // res.json({ accessToken, user: foundVolunteer });
+    
+       res.json({accessToken:accessToken, volunteer:foundVolunteer})
   } catch (error) {
     console.error("Error logging in volunteer:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Organization login
 const login = async (req, res) => {
@@ -865,6 +894,7 @@ const login = async (req, res) => {
     }
 
     const organizationInfo = {
+      _id:foundOrganization._id,
       name: foundOrganization.name,
       email: foundOrganization.email,
       phone: foundOrganization.phone,
@@ -874,13 +904,12 @@ const login = async (req, res) => {
     };
 
     const accessToken = jwt.sign(organizationInfo, process.env.ACCESS_TOKEN_SECRET);
-    res.json({ accessToken, organization: foundOrganization });
+       res.json({accessToken:accessToken, organization:organizationInfo})
   } catch (error) {
     console.error("Error logging in organization:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 module.exports = {
   register,
   registerV,

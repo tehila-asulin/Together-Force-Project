@@ -19,7 +19,7 @@
 // //           password: "",
 // //           organizationNumber: "", 
 // //         },});
-    
+
 // //       const profileImage = watch("profileImage");
 // //       const [CreateOrganizationMutation]=useCreateOrganizationMutation()
 
@@ -32,9 +32,9 @@
 // //       //   catch{
 // //       //   console.log("error to add organization");
 // //       //   }
-    
+
 // //       // };
-    
+
 // // //     const onSubmit = async (data: any) => {
 // // //   try {
 // // //     const formData = new FormData();
@@ -121,7 +121,7 @@
 // //                       )}
 // //                     />
 // //                   </Box>
-    
+
 // //                   <Controller 
 // //                     name="name"
 // //                     control={control}
@@ -167,8 +167,8 @@
 // // />
 
 // //                 </Stack>
-    
-            
+
+
 // //                 <CardOverflow sx={styles.cardOverflow}>
 // //                   <CardActions sx={styles.cardActions}>
 // //                     <Button type="submit" size="sm" variant="solid">
@@ -211,7 +211,7 @@
 //           organizationNumber: "", 
 //         },
 //     });
-    
+
 //     const profileImage = watch("profileImage");
 //     const [CreateOrganizationMutation] = useCreateOrganizationMutation();
 
@@ -280,7 +280,7 @@
 // />
 
 //                   </Box>
-                
+
 //                             <Controller 
 //                                 name="name"
 //                                 control={control}
@@ -496,24 +496,32 @@ import Button from "@mui/joy/Button";
 import { Controller, useForm } from "react-hook-form";
 import { styles } from "../../styles/style";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
+import { useCreateOrganizationMutation, useLoginOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
 import profileOrganizationSchema from "../../schemas/profileOrganizationSchema";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
+import { useNavigate } from "react-router";
+
+import Cookies from "js-cookie";
 const SingUpOrganization = () => {
     const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
         mode: "onBlur",
-        resolver: zodResolver(profileOrganizationSchema), 
-        defaultValues: { 
-          name: "", 
-          profileImage: "",  
-          email: "", 
-          phone: "",
-          password: "",
-          organizationNumber: "", 
+        resolver: zodResolver(profileOrganizationSchema),
+        defaultValues: {
+            name: "",
+            profileImage: "",
+            email: "",
+            phone: "",
+            password: "",
+            organizationNumber: "",
         },
     });
-
+    const dispatch = useDispatch();
+    const userMode = useSelector(selectUserMode);
     const profileImage = watch("profileImage");
     const [CreateOrganizationMutation] = useCreateOrganizationMutation();
+    const [loginOrganization, { isLoading: isLoadingOrganization }] = useLoginOrganizationMutation();
+    const navigate = useNavigate();
 
     const onSubmit = async (data: any) => {
         try {
@@ -524,12 +532,22 @@ const SingUpOrganization = () => {
             formData.append("phone", data.phone);
             formData.append("password", data.password);
 
-            // אם קיים קובץ תמונה, הוסף אותו
+
             if (data.profileImage instanceof File) {
                 formData.append("profileImage", data.profileImage);
             }
 
-            await CreateOrganizationMutation(formData);  // שליחה ל-API
+            const signUpResponse = await CreateOrganizationMutation(formData);
+            //const email=data.email
+            //const password=data.password
+            //const loginResponse = await loginOrganization({email,password }).unwrap();
+            if (signUpResponse.data?.accessToken) {
+                Cookies.set("token", signUpResponse.data.accessToken, { expires: 7, path: "/" });
+            } 
+            dispatch(setCurrentUser(signUpResponse.data?.organization));
+            localStorage.setItem("user", JSON.stringify(signUpResponse.data?.organization));
+            localStorage.setItem("userMode", userMode);
+            navigate("/");
             reset();
         } catch (error) {
             console.error("Error adding organization:", error);
@@ -578,28 +596,28 @@ const SingUpOrganization = () => {
                                     )}
                                 />
                             </Box>
-                            <Controller 
+                            <Controller
                                 name="name"
                                 control={control}
                                 render={({ field }) => (
                                     <TextField {...field} label="Full Name" fullWidth margin="normal" error={!!errors.name} helperText={errors.name?.message} />
                                 )}
                             />
-                            <Controller 
+                            <Controller
                                 name="organizationNumber"
                                 control={control}
                                 render={({ field }) => (
                                     <TextField {...field} label="ID Number" fullWidth margin="normal" error={!!errors.organizationNumber} helperText={errors.organizationNumber?.message} />
                                 )}
                             />
-                            <Controller 
+                            <Controller
                                 name="phone"
                                 control={control}
                                 render={({ field }) => (
                                     <TextField {...field} label="Phone" fullWidth margin="normal" error={!!errors.phone} helperText={errors.phone?.message} />
                                 )}
                             />
-                            <Controller 
+                            <Controller
                                 name="email"
                                 control={control}
                                 render={({ field }) => (
@@ -624,7 +642,7 @@ const SingUpOrganization = () => {
                         </Stack>
 
                         <CardActions sx={styles.cardActions}>
-                            <Button type="submit" size="sm" variant="solid">
+                            <Button type="submit" size="sm" variant="solid" disabled={isLoadingOrganization}>
                                 Save
                             </Button>
                         </CardActions>

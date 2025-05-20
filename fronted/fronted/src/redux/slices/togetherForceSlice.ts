@@ -111,7 +111,6 @@ import {Volunteering} from "../../interface/Volunteering"
 
 interface TogetherForceState {
   currentUser: Volunteer | Organization | null;
-  token: string | null;
   userMode: UserModes;
   volunteerings: Volunteering[];
 }
@@ -122,7 +121,6 @@ const initialState: TogetherForceState = {
     ? JSON.parse(localStorage.getItem("user")!)
     : null,
   userMode: (localStorage.getItem("userMode") as UserModes) || UserModes.None,
-  token: localStorage.getItem("token") || null,
   volunteerings: [], 
 };
 
@@ -133,9 +131,6 @@ export const togetherForceSlice = createSlice({
   reducers: {
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
-    },
-    setToken: (state, action) => {
-      state.token = action.payload;
     },
     setUserMode: (state, action) => {
       state.userMode = action.payload;
@@ -152,7 +147,6 @@ export const togetherForceSlice = createSlice({
 
 export const {
   setCurrentUser,
-  setToken,
   setUserMode,
   setVolunteerings,
   addVolunteering,
@@ -161,8 +155,6 @@ export const {
 
 export const selectCurrentUser = (state: { togetherForce: TogetherForceState }) =>
   state.togetherForce.currentUser;
-export const selectToken = (state: { togetherForce: TogetherForceState }) =>
-  state.togetherForce.token;
 export const selectUserMode = (state: { togetherForce: TogetherForceState }) =>
   state.togetherForce.userMode;
 export const selectVolunteerings = (state: { togetherForce: TogetherForceState }) =>

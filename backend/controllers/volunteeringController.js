@@ -1,5 +1,29 @@
 const Volunteering = require('../models/Volunteering');
 
+exports.getFilteredVolunteering = async (req, res) => {
+  const { organizationNumber, selectedCities = [], selectedOptions = [] } = req.body;
+
+  try {
+    let filter = {};
+
+    if (organizationNumber) {
+      filter.byOrganizationNumber = organizationNumber;
+    } else {
+      if (selectedCities.length > 0) {
+        filter.origin = { $elemMatch: { $in: selectedCities } };
+      }
+      if (selectedOptions.length > 0) {
+        filter.title = { $in: selectedOptions };
+      }
+    }
+
+    const filtered = await Volunteering.find(filter);
+    res.json(filtered);
+  } catch (error) {
+    console.error('Filtering failed:', error);
+    res.status(500).json({ message: 'Filtering failed' });
+  }
+};
 
 exports.addVolunteering = async (req, res) => {
     const volunteering = await Volunteering.create(req.body);

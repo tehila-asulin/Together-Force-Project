@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserMode, selectCurrentUser, selectUserMode ,setCurrentUser} from "../redux/slices/togetherForceSlice";
 import { UserModes } from "../interface/UserModes";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const [signupAnchorEl, setSignupAnchorEl] = useState<null | HTMLElement>(null);
@@ -46,8 +47,8 @@ const Header = () => {
   };
 
   const handleLogout = () => {
+      Cookies.remove("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
     localStorage.removeItem("userMode");
     dispatch(setCurrentUser(null))
     dispatch(setUserMode(UserModes.None))

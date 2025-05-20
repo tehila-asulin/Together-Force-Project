@@ -8,6 +8,7 @@ import SingUpVolunteer from "../components/singUp/SingUpVolunteer";
 import SingUpOrganization from "../components/singUp/singUpOrganization"
 import SingIn from "../components/SingIn/SingIn";
 import VolunteeringForm from "../components/VolunteeringForm";
+import DetailsVolunteering from "../components/detailsVolunteering";
 
 const router = createBrowserRouter([
     {
@@ -21,7 +22,8 @@ const router = createBrowserRouter([
     {path:"/signup/organization", element:<SingUpOrganization/>},
     {path:"/signin/volunteer", element:<SingIn/>},
     {path:"/signin/organization", element:<SingIn/>},
-    {path:"/addVolunteering", element:<VolunteeringForm/>}
+    {path:"/addVolunteering", element:<VolunteeringForm/>},
+    {path:"/detailsVolunteering/:volunteeringId", element:<DetailsVolunteering/>}
 ]   
     } 
 ]);

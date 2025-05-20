@@ -1,58 +1,5 @@
 [
-    {
-        "name": "אבו גוש",
-        "english_name": "abu ghosh",
-        "long": 35.11016,
-        "latt": 31.80575
-    },
-    {
-        "name": "אבו עבדון",
-        "english_name": "abu  abdun",
-        "long": 35.11016,
-        "latt": 31.80575
-    },
-    {
-        "name": "אבו ג'ווייעד",
-        "english_name": "abu juwei'id",
-        "long": 34.7749,
-        "latt": 32.05493
-    },
-    {
-        "name": "אבו תלול",
-        "english_name": "abu tulul",
-        "long": 34.73974,
-        "latt": 31.38059
-    },
-    {
-        "name": "אבו רוקייק",
-        "english_name": "abu ruqayyeq",
-        "long": 35.11016,
-        "latt": 31.80575
-    },
-    {
-        "name": "אבו עמאר",
-        "english_name": "abu  ammar",
-        "long": 35.14814,
-        "latt": 32.53362
-    },
-    {
-        "name": "אבו קרינאת ישוב",
-        "english_name": "abu qureinat",
-        "long": 34.95858,
-        "latt": 31.13369
-    },
-    {
-        "name": "אבו רובייעה",
-        "english_name": "abu rubei'a",
-        "long": 35.23931,
-        "latt": 31.74771
-    },
-    {
-        "name": "אבו קורינאת",
-        "english_name": "abu qureinat",
-        "long": 34.95858,
-        "latt": 31.13369
-    },
+    
     {
         "name": "אבטליון",
         "english_name": "avtalyon",
@@ -196,19 +143,8 @@
         "english_name": "avshalom",
         "long": 34.33561,
         "latt": 31.19688
-    },
-    {
-        "name": "אום אל-פחם",
-        "english_name": "umm al-fahm",
-        "long": 35.14797,
-        "latt": 32.52028
-    },
-    {
-        "name": "אום אל-קוטוף",
-        "english_name": "umm al-qutuf",
-        "long": 35.05497,
-        "latt": 32.47214
-    },
+    }
+   ,
     {
         "name": "אזור",
         "english_name": "azor",
@@ -2506,12 +2442,6 @@
         "english_name": "hulda",
         "long": 34.88569,
         "latt": 31.82813
-    },
-    {
-        "name": "ח'ואלד",
-        "english_name": "khawaled",
-        "long": 35.15653,
-        "latt": 32.75378
     },
     {
         "name": "חלץ",
