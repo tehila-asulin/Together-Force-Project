@@ -26,11 +26,14 @@ const VolunteeringList = () => {
 
   return (
     
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-      {filteredVolunteering?.map((v: Volunteering) => (
-        <VolunteeringCard key={v._id} volunteering={v} />
-      ))}
+   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+  {filteredVolunteering?.map((v: Volunteering) => (
+    <div key={v._id}>
+      <VolunteeringCard volunteering={v} />
     </div>
+  ))}
+</div>
+
   );
 };
 

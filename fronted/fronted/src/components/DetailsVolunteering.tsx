@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useGetVolunteeringByIdQuery } from "../redux/slices/api/volunteeringApiSlice";
 import { useGetOrganizationByNumberQuery } from "../redux/slices/api/organizationApiSlice";
-import { selectCurrentUser } from "../redux/slices/togetherForceSlice";
-import { useSelector } from "react-redux";
 import {
   Box,
   Typography,
@@ -17,11 +15,6 @@ import {
   IconButton
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {useEditVolunteeringMutation } from "../redux/slices/api/volunteeringApiSlice"
-import {useEditVolunteerMutation} from "../redux/slices/api/volunteerApiSlice"
-import {statusV} from "../interface/statusV"
-import {Volunteering} from "../interface/Volunteering"
-import {Volunteer} from "../interface/Volunteer"
 const DetailsVolunteering = () => {
   const { volunteeringId } = useParams<{ volunteeringId: string }>();
   const volunteeringIdStr = volunteeringId ? String(volunteeringId) : "";

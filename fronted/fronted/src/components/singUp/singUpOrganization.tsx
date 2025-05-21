@@ -499,23 +499,38 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateOrganizationMutation, useLoginOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
 import profileOrganizationSchema from "../../schemas/profileOrganizationSchema";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
+import {selectCurrentUser ,setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
 import { useNavigate } from "react-router";
+import {Organization} from "../../interface/Organization"
 
 import Cookies from "js-cookie";
 const SingUpOrganization = () => {
+    const currentUser=useSelector(selectCurrentUser)
     const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
         mode: "onBlur",
         resolver: zodResolver(profileOrganizationSchema),
-        defaultValues: {
-            name: "",
-            profileImage: "",
-            email: "",
-            phone: "",
-            password: "",
-            organizationNumber: "",
-        },
+       
+    defaultValues: (currentUser && "organizationNumber" in currentUser)
+  ? {
+      name: currentUser.name || "",
+      email: currentUser.email || "",
+      phone: currentUser.phone || "",
+      password: "",
+      profileImage: currentUser.profileImage || "",
+     organizationNumber: String(currentUser.organizationNumber) || "",
+
+    }
+  : {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      profileImage: "",
+      organizationNumber: "",
+    },
+
     });
+ 
     const dispatch = useDispatch();
     const userMode = useSelector(selectUserMode);
     const profileImage = watch("profileImage");

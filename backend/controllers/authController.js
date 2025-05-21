@@ -810,7 +810,7 @@ const selectedCities = JSON.parse(req.body.selectedCities);
  
     if (volunteer) {
       const volunteerInfo = {
-        _id:volunteer._id,
+      _id:volunteer._id,
       name: volunteer.name,
       email: volunteer.email,
       phone: volunteer.phone,
@@ -909,9 +909,4 @@ const login = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-module.exports = {
-  register,
-  registerV,
-  login,
-  loginV
-};
+module.exports = {register,registerV,login,loginV};

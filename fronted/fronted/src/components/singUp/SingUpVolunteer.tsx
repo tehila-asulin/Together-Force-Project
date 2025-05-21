@@ -290,6 +290,8 @@ import volunteerCategories from "../../../public/volunteerCategories.json";
 import profileSchema from "../../schemas/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import cities from "../../../public/dataCities.json";
+import { selectCurrentUser } from "../../redux/slices/togetherForceSlice";
+
 import {
   useCreateVolunteerMutation,
   useLoginVolunteerMutation
@@ -302,6 +304,8 @@ import {
 import Cookies from "js-cookie";
 
 const SingUpVolunteer = () => {
+  const currentUser = useSelector(selectCurrentUser);
+
   const {
     reset,
     handleSubmit,
@@ -311,16 +315,28 @@ const SingUpVolunteer = () => {
   } = useForm({
     mode: "onBlur",
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      name: "",
-      idNumber: "",
-      selectedCities: [],
-      profileImage: "",
-      email: "",
-      phone: "",
-      password: "",
-      selectedVolunteerOptions: []
-    }
+    defaultValues:
+    currentUser && "idNumber" in currentUser
+      ? {
+          name: currentUser.name || "",
+          idNumber: currentUser.idNumber || "",
+          selectedCities: currentUser.selectedCities || [],
+          profileImage: currentUser.profileImage || "",
+          email: currentUser.email || "",
+          phone: currentUser.phone || "",
+          password: "",
+          selectedVolunteerOptions: currentUser.selectedVolunteerOptions || [],
+        }
+      : {
+          name: "",
+          idNumber: "",
+          selectedCities: [],
+          profileImage: "",
+          email: "",
+          phone: "",
+          password: "",
+          selectedVolunteerOptions: [],
+        }
   });
 
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -335,10 +351,6 @@ const SingUpVolunteer = () => {
   const dispatch = useDispatch();
   const userMode = useSelector(selectUserMode);
 
-  // const allVolunteerOptions = Object.entries(volunteerCategories).flatMap(
-  //   ([category, options]) =>
-  //     options.map((opt) => `${category} - ${opt.name}`)
-  // );
  const allVolunteerOptions = Object.values(volunteerCategories);
 
   const onSubmit = async (data: any) => {
