@@ -274,15 +274,16 @@ const organizationApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['TogetherForce'],
     }),
 
-    editOrganization: builder.mutation<Organization, Organization>({
-      query: (updatedOrganization) => ({
-        url: `/organizationRoutes/${updatedOrganization._id}`,
-        method: "PUT",
-        body: updatedOrganization,
-        credentials: "include",
-      }),
-      invalidatesTags: ["TogetherForce"],
-    }),
+   editOrganization: builder.mutation<Organization, FormData>({
+   query: (updatedOrganization) => ({
+    url: `/organizationRoutes/${updatedOrganization.get('_id')}`, 
+    method: "PUT",
+    body: updatedOrganization,
+    credentials: "include",
+  }),
+  invalidatesTags: ["TogetherForce"],
+}),
+
 
     removeOrganization: builder.mutation<{ message: string }, string>({
       query: (id) => ({

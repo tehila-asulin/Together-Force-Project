@@ -16,11 +16,11 @@ const mongoose = require('mongoose');
 
 const organizationSchema = new mongoose.Schema({
   name: String,
-  email: String,
+  email: { type: String, required: true, unique: true },
   phone: String,
   profileImage: String,
   password: String,
-  organizationNumber: Number
+  organizationNumber: { type: Number, required: true, unique: true },
 });
 
 module.exports = mongoose.model('Organization', organizationSchema);
