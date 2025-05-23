@@ -1,17 +1,22 @@
 const mongoose = require('mongoose');
 
+const statusV = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
 const volunteeringSchema = new mongoose.Schema({
   title: String,
   description: String,
   origin: String,
   phone: String,
-  isDone: Boolean,
   feedback: Number,
   idMaker: String,
   status: {
     type: String,
-    enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELED'],
-    default: 'PENDING'
+    enum: Object.values(statusV),
+    default: statusV.PENDING
   },
   byOrganizationNumber: Number,
   madeByVolunteerEmail: String,

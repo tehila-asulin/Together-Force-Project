@@ -8,5 +8,4 @@ export interface Volunteer {
     selectedCities: string[];
     selectedVolunteerOptions: string[];
     profileImage?: string;
-    history?: string[];
   }

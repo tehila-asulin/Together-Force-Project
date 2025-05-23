@@ -1,5 +1,5 @@
 const Organization = require('../models/Organization');
-
+const cloudinary = require('cloudinary').v2;
 
 exports.addOrganization = async (req, res) => {
     const organization = await Organization.create(req.body);
@@ -23,26 +23,49 @@ exports.deleteOrganization = async (req, res) => {
 };
 
 exports.updateOrganization = async (req, res) => {
-  const {id} = req.params;
-  const { name,email,  phone, history, image, password, organizationNumber} = req.body;
+  const { id } = req.params;
+  const { name, email, phone, history, password, organizationNumber } = req.body;
+  let profileImageUrl;
 
   try {
-    const updateOrganization = await Organization.findOneAndUpdate(
-      {_id: id }, 
-      {name,email,  phone, history, image, password, organizationNumber},
+    if (req.files && req.files.profileImage) {
+      try {
+        const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
+          folder: "volunteers"
+        });
+        profileImageUrl = result.secure_url;
+      } catch (err) {
+        console.error("Cloudinary upload error:", err);
+        return res.status(500).json({ message: "Error uploading image to Cloudinary" });
+      }
+    }
+
+    const updateFields = { name, email, phone, history, organizationNumber };
+    if (profileImageUrl) {
+      updateFields.profileImage = profileImageUrl;
+    }
+    if (password && password.trim() !== "") {
+      updateFields.password = password;
+    }
+
+    const updatedOrganization = await Organization.findOneAndUpdate(
+      { _id: id },
+      updateFields,
       { new: true }
     );
 
-    if (!updateOrganization) {
-      return res.status(404).json({ message: 'Organization not found' });
+    if (!updatedOrganization) {
+      return res.status(404).json({ message: "Organization not found" });
     }
 
-    res.json(updateOrganization);
+    res.json(updatedOrganization);
   } catch (error) {
-    console.error('Failed to update Organization:', error);
-    res.status(500).json({ message: 'Failed to update Organization' });
+    console.error("Failed to update Organization:", error);
+    res.status(500).json({ message: "Failed to update Organization" });
   }
 };
+
+
 exports.getAllOrganizations = async (req, res) => {
     try {
       const organizations = await Organization.find();

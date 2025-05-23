@@ -120,9 +120,9 @@ const volunteerApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["TogetherForce"],
     }),
 
-    editVolunteer: builder.mutation<Volunteer, Volunteer>({
+    editVolunteer: builder.mutation<Volunteer, FormData>({
       query: (updatedVolunteer) => ({
-        url: `/volunteerRoutes/${updatedVolunteer._id}`,
+        url: `/volunteerRoutes/${updatedVolunteer.get('_id')}`,
         method: "PUT",
         body: updatedVolunteer,
         credentials: "include",

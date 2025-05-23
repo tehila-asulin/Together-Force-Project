@@ -490,167 +490,424 @@
 // export default SingUpOrganization;
 
 
-import { Box, Divider, Stack, Typography, Card, CardActions, Avatar } from "@mui/joy";
+// import { Box, Divider, Stack, Typography, Card, CardActions, Avatar } from "@mui/joy";
+// import { TextField } from "@mui/material";
+// import Button from "@mui/joy/Button";
+// import { Controller, useForm } from "react-hook-form";
+// import { styles } from "../../styles/style";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { useCreateOrganizationMutation, useLoginOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
+// import profileOrganizationSchema from "../../schemas/profileOrganizationSchema";
+// import { useDispatch, useSelector } from "react-redux";
+// import {selectCurrentUser ,setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
+// import { useNavigate } from "react-router";
+// import {Organization} from "../../interface/Organization"
+
+// import Cookies from "js-cookie";
+// const SingUpOrganization = () => {
+//     const currentUser=useSelector(selectCurrentUser)
+//     const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
+//         mode: "onBlur",
+//         resolver: zodResolver(profileOrganizationSchema),
+       
+//     defaultValues: (currentUser && "organizationNumber" in currentUser)
+//   ? {
+//       name: currentUser.name || "",
+//       email: currentUser.email || "",
+//       phone: currentUser.phone || "",
+//       password: "",
+//       profileImage: currentUser.profileImage || "",
+//      organizationNumber: String(currentUser.organizationNumber) || "",
+
+//     }
+//   : {
+//       name: "",
+//       email: "",
+//       phone: "",
+//       password: "",
+//       profileImage: "",
+//       organizationNumber: "",
+//     },
+
+//     });
+ 
+//     const dispatch = useDispatch();
+//     const userMode = useSelector(selectUserMode);
+//     const profileImage = watch("profileImage");
+//     const [CreateOrganizationMutation] = useCreateOrganizationMutation();
+//     const [loginOrganization, { isLoading: isLoadingOrganization }] = useLoginOrganizationMutation();
+//     const navigate = useNavigate();
+
+//     const onSubmit = async (data: any) => {
+//         try {
+//             const formData = new FormData();
+//             formData.append("name", data.name);
+//             formData.append("organizationNumber", data.organizationNumber);
+//             formData.append("email", data.email);
+//             formData.append("phone", data.phone);
+//             formData.append("password", data.password);
+
+
+//             if (data.profileImage instanceof File) {
+//                 formData.append("profileImage", data.profileImage);
+//             }
+
+//             const signUpResponse = await CreateOrganizationMutation(formData);
+//             //const email=data.email
+//             //const password=data.password
+//             //const loginResponse = await loginOrganization({email,password }).unwrap();
+//             if (signUpResponse.data?.accessToken) {
+//                 Cookies.set("token", signUpResponse.data.accessToken, { expires: 7, path: "/" });
+//             } 
+//             dispatch(setCurrentUser(signUpResponse.data?.organization));
+//             localStorage.setItem("user", JSON.stringify(signUpResponse.data?.organization));
+//             localStorage.setItem("userMode", userMode);
+//             navigate("/");
+//             reset();
+//         } catch (error) {
+//             console.error("Error adding organization:", error);
+//         }
+//     };
+
+//     return (
+//         <Box sx={styles.container}>
+//             <Stack spacing={4} sx={styles.stack}>
+//                 <Card sx={styles.card}>
+//                     <form onSubmit={handleSubmit(onSubmit)}>
+//                         <Box sx={{ mb: 1 }}>
+//                             <Typography level="title-md">Personal Info</Typography>
+//                         </Box>
+//                         <Divider />
+//                         <Stack spacing={2}>
+//                             {/* העלאת תמונת פרופיל */}
+//                             <Box sx={styles.avatarBox}>
+//                                 <Avatar
+//                                     src={profileImage instanceof File ? URL.createObjectURL(profileImage) : "/default-avatar.png"}
+//                                     sx={styles.avatar}
+//                                 />
+//                                 <Controller
+//                                     name="profileImage"
+//                                     control={control}
+//                                     render={({ field }) => (
+//                                         <>
+//                                             <input
+//                                                 type="file"
+//                                                 accept="image/*"
+//                                                 onChange={(event) => {
+//                                                     const file = event.target.files?.[0];
+//                                                     if (file) {
+//                                                         field.onChange(file); // קובץ אמיתי
+//                                                     }
+//                                                 }}
+//                                                 style={styles.uploadButton}
+//                                                 id="profile-upload"
+//                                             />
+//                                             <label htmlFor="profile-upload">
+//                                                 <Button component="span" variant="outlined" size="sm">
+//                                                     Upload Image
+//                                                 </Button>
+//                                             </label>
+//                                         </>
+//                                     )}
+//                                 />
+//                             </Box>
+//                             <Controller
+//                                 name="name"
+//                                 control={control}
+//                                 render={({ field }) => (
+//                                     <TextField {...field} label="Full Name" fullWidth margin="normal" error={!!errors.name} helperText={errors.name?.message} />
+//                                 )}
+//                             />
+//                             <Controller
+//                                 name="organizationNumber"
+//                                 control={control}
+//                                 render={({ field }) => (
+//                                     <TextField {...field} label="ID Number" fullWidth margin="normal" error={!!errors.organizationNumber} helperText={errors.organizationNumber?.message} />
+//                                 )}
+//                             />
+//                             <Controller
+//                                 name="phone"
+//                                 control={control}
+//                                 render={({ field }) => (
+//                                     <TextField {...field} label="Phone" fullWidth margin="normal" error={!!errors.phone} helperText={errors.phone?.message} />
+//                                 )}
+//                             />
+//                             <Controller
+//                                 name="email"
+//                                 control={control}
+//                                 render={({ field }) => (
+//                                     <TextField {...field} label="Email" fullWidth margin="normal" error={!!errors.email} helperText={errors.email?.message} />
+//                                 )}
+//                             />
+//                             <Controller
+//                                 name="password"
+//                                 control={control}
+//                                 render={({ field }) => (
+//                                     <TextField
+//                                         {...field}
+//                                         type="password"
+//                                         label="Password"
+//                                         fullWidth
+//                                         margin="normal"
+//                                         error={!!errors.password}
+//                                         helperText={errors.password?.message}
+//                                     />
+//                                 )}
+//                             />
+//                         </Stack>
+
+//                         <CardActions sx={styles.cardActions}>
+//                             <Button type="submit" size="sm" variant="solid" disabled={isLoadingOrganization}>
+//                                 Save
+//                             </Button>
+//                         </CardActions>
+//                     </form>
+//                 </Card>
+//             </Stack>
+//         </Box>
+//     );
+// };
+
+// export default SingUpOrganization;
+import {
+  Box,
+  Divider,
+  Stack,
+  Typography,
+  Card,
+  CardActions,
+  Avatar
+} from "@mui/joy";
 import { TextField } from "@mui/material";
 import Button from "@mui/joy/Button";
 import { Controller, useForm } from "react-hook-form";
 import { styles } from "../../styles/style";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateOrganizationMutation, useLoginOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
-import profileOrganizationSchema from "../../schemas/profileOrganizationSchema";
+import { useCreateOrganizationMutation, useEditOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
+import getProfileOrganizationSchema from "../../schemas/profileOrganizationSchema";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
+import { selectCurrentUser, setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
 import { useNavigate } from "react-router";
-
 import Cookies from "js-cookie";
+import { useState } from "react";
+
 const SingUpOrganization = () => {
-    const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
-        mode: "onBlur",
-        resolver: zodResolver(profileOrganizationSchema),
-        defaultValues: {
-            name: "",
-            profileImage: "",
-            email: "",
-            phone: "",
-            password: "",
-            organizationNumber: "",
-        },
-    });
-    const dispatch = useDispatch();
-    const userMode = useSelector(selectUserMode);
-    const profileImage = watch("profileImage");
-    const [CreateOrganizationMutation] = useCreateOrganizationMutation();
-    const [loginOrganization, { isLoading: isLoadingOrganization }] = useLoginOrganizationMutation();
-    const navigate = useNavigate();
+  const currentUser = useSelector(selectCurrentUser);
+  const userMode = useSelector(selectUserMode);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [editOrganization] = useEditOrganizationMutation();
 
-    const onSubmit = async (data: any) => {
-        try {
-            const formData = new FormData();
-            formData.append("name", data.name);
-            formData.append("organizationNumber", data.organizationNumber);
-            formData.append("email", data.email);
-            formData.append("phone", data.phone);
-            formData.append("password", data.password);
+  const [previewImage, setPreviewImage] = useState(
+    currentUser?.profileImage || "/default-avatar.png"
+  );
 
+  const isEditMode = !!(currentUser && "organizationNumber" in currentUser);
 
-            if (data.profileImage instanceof File) {
-                formData.append("profileImage", data.profileImage);
-            }
-
-            const signUpResponse = await CreateOrganizationMutation(formData);
-            //const email=data.email
-            //const password=data.password
-            //const loginResponse = await loginOrganization({email,password }).unwrap();
-            if (signUpResponse.data?.accessToken) {
-                Cookies.set("token", signUpResponse.data.accessToken, { expires: 7, path: "/" });
-            } 
-            dispatch(setCurrentUser(signUpResponse.data?.organization));
-            localStorage.setItem("user", JSON.stringify(signUpResponse.data?.organization));
-            localStorage.setItem("userMode", userMode);
-            navigate("/");
-            reset();
-        } catch (error) {
-            console.error("Error adding organization:", error);
+  const {
+    reset,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors }
+  } = useForm({
+    mode: "onBlur",
+    resolver: zodResolver(getProfileOrganizationSchema(isEditMode)),
+    defaultValues: isEditMode
+      ? {
+          name: currentUser.name || "",
+          email: currentUser.email || "",
+          phone: currentUser.phone || "",
+          password: "",
+          profileImage: currentUser.profileImage || "",
+          organizationNumber: String(currentUser.organizationNumber) || "",
         }
-    };
+      : {
+          name: "",
+          email: "",
+          phone: "",
+          password: "",
+          profileImage: "",
+          organizationNumber: "",
+        },
+  });
 
-    return (
-        <Box sx={styles.container}>
-            <Stack spacing={4} sx={styles.stack}>
-                <Card sx={styles.card}>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Box sx={{ mb: 1 }}>
-                            <Typography level="title-md">Personal Info</Typography>
-                        </Box>
-                        <Divider />
-                        <Stack spacing={2}>
-                            {/* העלאת תמונת פרופיל */}
-                            <Box sx={styles.avatarBox}>
-                                <Avatar
-                                    src={profileImage instanceof File ? URL.createObjectURL(profileImage) : "/default-avatar.png"}
-                                    sx={styles.avatar}
-                                />
-                                <Controller
-                                    name="profileImage"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(event) => {
-                                                    const file = event.target.files?.[0];
-                                                    if (file) {
-                                                        field.onChange(file); // קובץ אמיתי
-                                                    }
-                                                }}
-                                                style={styles.uploadButton}
-                                                id="profile-upload"
-                                            />
-                                            <label htmlFor="profile-upload">
-                                                <Button component="span" variant="outlined" size="sm">
-                                                    Upload Image
-                                                </Button>
-                                            </label>
-                                        </>
-                                    )}
-                                />
-                            </Box>
-                            <Controller
-                                name="name"
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField {...field} label="Full Name" fullWidth margin="normal" error={!!errors.name} helperText={errors.name?.message} />
-                                )}
-                            />
-                            <Controller
-                                name="organizationNumber"
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField {...field} label="ID Number" fullWidth margin="normal" error={!!errors.organizationNumber} helperText={errors.organizationNumber?.message} />
-                                )}
-                            />
-                            <Controller
-                                name="phone"
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField {...field} label="Phone" fullWidth margin="normal" error={!!errors.phone} helperText={errors.phone?.message} />
-                                )}
-                            />
-                            <Controller
-                                name="email"
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField {...field} label="Email" fullWidth margin="normal" error={!!errors.email} helperText={errors.email?.message} />
-                                )}
-                            />
-                            <Controller
-                                name="password"
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        type="password"
-                                        label="Password"
-                                        fullWidth
-                                        margin="normal"
-                                        error={!!errors.password}
-                                        helperText={errors.password?.message}
-                                    />
-                                )}
-                            />
-                        </Stack>
+  const [CreateOrganizationMutation] = useCreateOrganizationMutation();
 
-                        <CardActions sx={styles.cardActions}>
-                            <Button type="submit" size="sm" variant="solid" disabled={isLoadingOrganization}>
-                                Save
-                            </Button>
-                        </CardActions>
-                    </form>
-                </Card>
+  const onSubmit = async (data: any) => {
+    try {
+      if (isEditMode && !data.password) {
+        delete data.password; 
+      }
+
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("organizationNumber", data.organizationNumber);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+      if (data.password) formData.append("password", data.password);
+      if (data.profileImage instanceof File) {
+        formData.append("profileImage", data.profileImage);
+      }
+
+      if (isEditMode) {
+        formData.append("_id", currentUser._id);
+       const result = await editOrganization(formData).unwrap();
+        dispatch(setCurrentUser(result));
+        localStorage.setItem("user", JSON.stringify(result));
+      } else {
+        const signUpResponse = await CreateOrganizationMutation(formData);
+        if (signUpResponse.data?.accessToken) {
+          Cookies.set("token", signUpResponse.data.accessToken, { expires: 7, path: "/" });
+        }
+
+        dispatch(setCurrentUser(signUpResponse.data?.organization));
+        localStorage.setItem("user", JSON.stringify(signUpResponse.data?.organization));
+        localStorage.setItem("userMode", userMode);
+       
+      }
+     navigate("/");
+      reset();
+    } catch (error) {
+      console.error("Error saving organization:", error);
+    }
+  };
+
+  return (
+    <Box sx={styles.container}>
+      <Stack spacing={4} sx={styles.stack}>
+        <Card sx={styles.card}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Box sx={{ mb: 1 }}>
+              <Typography level="title-md">Personal Info</Typography>
+            </Box>
+            <Divider />
+            <Stack spacing={2}>
+              {/* תמונת פרופיל */}
+              <Box sx={styles.avatarBox}>
+                <Avatar
+                  src={previewImage}
+                  sx={styles.avatar}
+                />
+                <Controller
+                  name="profileImage"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) {
+                            field.onChange(file);
+                            setPreviewImage(URL.createObjectURL(file));
+                          }
+                        }}
+                        style={styles.uploadButton}
+                        id="profile-upload"
+                      />
+                      <label htmlFor="profile-upload">
+                        <Button component="span" variant="outlined" size="sm">
+                          Upload Image
+                        </Button>
+                      </label>
+                    </>
+                  )}
+                />
+              </Box>
+
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Full Name"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="organizationNumber"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="ID Number"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.organizationNumber}
+                    helperText={errors.organizationNumber?.message}
+                    disabled={isEditMode}
+                  />
+                )}
+              />
+
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Phone"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.phone}
+                    helperText={errors.phone?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Email"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                    disabled={isEditMode}
+                  />
+                )}
+              />
+
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="password"
+                    label="Password"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                    disabled={isEditMode}
+                  />
+                )}
+              />
             </Stack>
-        </Box>
-    );
+
+            <CardActions sx={styles.cardActions}>
+              <Button type="submit" size="sm" variant="solid">
+                {isEditMode ? "עדכן" : "הירשם"}
+              </Button>
+            </CardActions>
+          </form>
+        </Card>
+      </Stack>
+    </Box>
+  );
 };
 
 export default SingUpOrganization;
+

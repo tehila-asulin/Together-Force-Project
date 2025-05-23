@@ -1,5 +1,5 @@
 const Volunteer = require('../models/Volunteer');
-
+const cloudinary = require('cloudinary').v2;
 
 // exports.addVolunteer = async (req, res) => {
 //     const volunteer = await Volunteer.create(req.body);
@@ -49,13 +49,51 @@ exports.deleteVolunteer = async (req, res) => {
 };
 
 exports.updateVolunteer = async (req, res) => {
-  const {id} = req.params;
-  const {name,	email,Skills,Origin,phone,history,image} = req.body;
+  const { id } = req.params;
+  const {
+    name,
+    email,
+    phone,
+    password
+  } = req.body;
+  
+const selectedVolunteerOptions = JSON.parse(req.body.selectedVolunteerOptions);
+const selectedCities = JSON.parse(req.body.selectedCities);
+  let profileImageUrl;
 
   try {
-    const updatedVolunteer = await User.findOneAndUpdate(
-      {_id: id }, 
-      {name,	email,Skills,Origin,phone,history,image },
+    
+    if (req.files && req.files.profileImage) {
+      try {
+        const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
+          folder: "volunteers"
+        });
+        profileImageUrl = result.secure_url;
+      } catch (err) {
+        console.error("Cloudinary upload error:", err);
+        return res.status(500).json({ message: "Error uploading image to Cloudinary" });
+      }
+    }
+
+    const updateFields = {
+      name,
+      email,
+      phone,
+      selectedCities,
+      selectedVolunteerOptions,
+    };
+
+    if (profileImageUrl) {
+      updateFields.profileImage = profileImageUrl;
+    }
+
+    if (password && password.trim() !== "") {
+      updateFields.password = password;
+    }
+
+    const updatedVolunteer = await Volunteer.findOneAndUpdate(
+      { _id: id },
+      updateFields,
       { new: true }
     );
 
@@ -69,6 +107,7 @@ exports.updateVolunteer = async (req, res) => {
     res.status(500).json({ message: 'Failed to update Volunteer' });
   }
 };
+
 exports.getAllVolunteers = async (req, res) => {
     try {
       const volunteers = await Volunteer.find();

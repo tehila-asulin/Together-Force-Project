@@ -1,12 +1,28 @@
-import React from "react";
-import { useParams } from "react-router";
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router";
 import { useGetVolunteeringByIdQuery } from "../redux/slices/api/volunteeringApiSlice";
 import { useGetOrganizationByNumberQuery } from "../redux/slices/api/organizationApiSlice";
-import { Box, Typography, CircularProgress, Avatar, Paper } from "@mui/material";
-
-const DetailsVolunteering= () => {
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  IconButton
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+const DetailsVolunteering = () => {
   const { volunteeringId } = useParams<{ volunteeringId: string }>();
   const volunteeringIdStr = volunteeringId ? String(volunteeringId) : "";
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(true);
+  //const [updateVolunteering]=useEditVolunteeringMutation()
+
+
   const {
     data: volunteering,
     error: volunteeringError,
@@ -23,6 +39,10 @@ const DetailsVolunteering= () => {
     isLoading: orgLoading,
   } = useGetOrganizationByNumberQuery(orgNumberStr, { skip: !orgNumberStr });
 
+  const handleClose = () => {
+    setOpen(false);
+    navigate(-1); 
+  };
   if (volunteeringLoading || orgLoading) {
     return (
       <Box display="flex" justifyContent="center" mt={5}>
@@ -33,7 +53,7 @@ const DetailsVolunteering= () => {
 
   if (volunteeringError || orgError) {
     return (
-      <Box mt={5}>
+      <Box mt={5} textAlign="center">
         <Typography color="error">אירעה שגיאה בטעינת הנתונים.</Typography>
       </Box>
     );
@@ -41,48 +61,68 @@ const DetailsVolunteering= () => {
 
   if (!volunteering) {
     return (
-      <Box mt={5}>
+      <Box mt={5} textAlign="center">
         <Typography>לא נמצאה התנדבות עם מזהה זה.</Typography>
       </Box>
     );
   }
 
   return (
-    <Paper sx={{ maxWidth: 600, margin: "auto", p: 4, mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.8rem", position: "relative" }}>
         {volunteering.title}
-      </Typography>
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{ position: "absolute", right: 8, top: 8 }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-      {orgData && (
-        <Box display="flex" alignItems="center" mb={3}>
-          <Avatar
-            alt={String(orgData.organizationNumber) || "Organization"}
-            src={orgData.profileImage}
-            sx={{ width: 56, height: 56, mr: 2 }}
-          />
-          <Typography variant="h6">
-            {orgData.name}
+      <DialogContent dividers>
+        <Box display="flex" flexDirection="column" alignItems="center" textAlign="center" gap={2}>
+          {orgData && (
+            <>
+              <Avatar
+                alt={orgData.name}
+                src={orgData.profileImage}
+                sx={{ width: 70, height: 70 }}
+              />
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                ע"י הארגון: {orgData.name}
+              </Typography>
+            </>
+          )}
+
+          <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
+            פרטי ההתנדבות: {volunteering.description}
+          </Typography>
+
+          <Typography variant="body2">
+            📍 עיר: {volunteering.origin}
+          </Typography>
+
+          <Typography variant="body2">
+           📅 לביצוע עד: {new Date(volunteering.deadline).toLocaleString("he-IL", {
+             dateStyle: "full",
+             timeStyle: "short",
+            })}
+           </Typography>
+
+
+          <Typography variant="body2">
+            ☎️ טלפון ליצירת קשר: {volunteering.phone}
           </Typography>
         </Box>
-      )}
+      </DialogContent>
 
-      <Typography variant="body1" paragraph>
-        {volunteering.description || "אין תיאור זמין."}
-      </Typography>
-
-      <Typography variant="body2" color="text.secondary">
-        עיר: {volunteering.origin}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        טלפון: {volunteering.phone}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        תאריך אחרון להגשה: {new Date(volunteering.deadline).toLocaleDateString("he-IL")}
-      </Typography>
-    </Paper>
+      <DialogActions sx={{ justifyContent: "center" }}>
+     
+      </DialogActions>
+    </Dialog>
   );
 };
-
 
 
 export default DetailsVolunteering;

@@ -765,13 +765,12 @@ const registerV = async (req, res) => {
       email,
       phone,
       idNumber,
-      selectedCities,
       history,
       password
     } = req.body;
-console.log(selectedCities);
 
 const selectedVolunteerOptions = JSON.parse(req.body.selectedVolunteerOptions);
+const selectedCities = JSON.parse(req.body.selectedCities);
     if (!name || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
@@ -811,7 +810,7 @@ const selectedVolunteerOptions = JSON.parse(req.body.selectedVolunteerOptions);
  
     if (volunteer) {
       const volunteerInfo = {
-        _id:volunteer._id,
+      _id:volunteer._id,
       name: volunteer.name,
       email: volunteer.email,
       phone: volunteer.phone,
@@ -910,9 +909,4 @@ const login = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-module.exports = {
-  register,
-  registerV,
-  login,
-  loginV
-};
+module.exports = {register,registerV,login,loginV};

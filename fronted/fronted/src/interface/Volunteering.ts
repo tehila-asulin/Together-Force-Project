@@ -7,7 +7,7 @@ export interface Volunteering {
   phone: string;
   status: statusV;
   byOrganizationNumber: number;
-  madeByVolunteerEmail?: string;
+  idMaker?: string;
   deadline: Date;
   createdAt: Date; 
   updatedAt?: Date;
