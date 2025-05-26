@@ -7,7 +7,7 @@ const volunteeringApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getFilteredVolunteering: builder.query<Volunteering[], any>({
    query: (params) => ({
-    url: '/volunteeringRoutes/filtered',
+    url: '/volunteeringRoutes/filter',
     method: 'POST',
     body: params,
   }),
@@ -26,7 +26,7 @@ const volunteeringApiSlice = apiSlice.injectEndpoints({
 
     createVolunteering: builder.mutation<Volunteering, Partial<Volunteering>>({
       query: (newVolunteer) => ({
-        url: "volunteeringRoutes/addVolunteering",
+        url: "/volunteeringRoutes/addVolunteering",
         method: "POST",
         body: newVolunteer
       }),

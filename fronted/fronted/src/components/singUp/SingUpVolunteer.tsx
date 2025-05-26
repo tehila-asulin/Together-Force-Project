@@ -37,7 +37,7 @@
 
 //   const selectedCities = watch("selectedCities");
 //     const profileImage = watch("profileImage");
- 
+
 //    const dispatch = useDispatch();
 //     const userMode = useSelector(selectUserMode);
 
@@ -55,7 +55,7 @@
 //             if (data.profileImage instanceof File) {
 //                 formData.append("profileImage", data.profileImage);
 //             }
-          
+
 //           const SingUpVolunteer= await createNewVolunteer(formData);  
 //             if (SingUpVolunteer.data?.accessToken) {
 //                Cookies.set("token", SingUpVolunteer.data?.accessToken, { expires: 7, path: "/" });
@@ -633,7 +633,7 @@ import cities from "../../../public/dataCities.json";
 import { selectCurrentUser } from "../../redux/slices/togetherForceSlice";
 import {
   useCreateVolunteerMutation,
-  useEditVolunteerMutation 
+  useEditVolunteerMutation
 } from "../../redux/slices/api/volunteerApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -646,7 +646,7 @@ import { useNavigate } from "react-router";
 const SingUpVolunteer = () => {
   const navigate = useNavigate();
   const currentUser = useSelector(selectCurrentUser);
-  const [updateVolunteer] = useEditVolunteerMutation(); 
+  const [updateVolunteer] = useEditVolunteerMutation();
   const isEditMode = !!(currentUser && "idNumber" in currentUser);
 
   const {
@@ -661,25 +661,25 @@ const SingUpVolunteer = () => {
     defaultValues:
       isEditMode
         ? {
-            name: currentUser.name || "",
-            idNumber: currentUser.idNumber || "",
-            selectedCities: currentUser.selectedCities || [],
-            profileImage: currentUser.profileImage || "",
-            email: currentUser.email || "",
-            phone: currentUser.phone || "",
-            password: "",
-            selectedVolunteerOptions:currentUser.selectedVolunteerOptions || [],
-          }
+          name: currentUser.name || "",
+          idNumber: currentUser.idNumber || "",
+          selectedCities: currentUser.selectedCities || [],
+          profileImage: currentUser.profileImage || "",
+          email: currentUser.email || "",
+          phone: currentUser.phone || "",
+          password: "",
+          selectedVolunteerOptions: currentUser.selectedVolunteerOptions || [],
+        }
         : {
-            name: "",
-            idNumber: "",
-            selectedCities: [],
-            profileImage: "",
-            email: "",
-            phone: "",
-            password: "",
-            selectedVolunteerOptions: [],
-          }
+          name: "",
+          idNumber: "",
+          selectedCities: [],
+          profileImage: "",
+          email: "",
+          phone: "",
+          password: "",
+          selectedVolunteerOptions: [],
+        }
   });
 
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -695,7 +695,7 @@ const SingUpVolunteer = () => {
   const onSubmit = async (data: any) => {
     try {
       if (isEditMode && !data.password) {
-        delete data.password; 
+        delete data.password;
       }
       const formData = new FormData();
       formData.append("name", data.name);
@@ -723,17 +723,11 @@ const SingUpVolunteer = () => {
         localStorage.setItem("user", JSON.stringify(result.volunteer));
         localStorage.setItem("userMode", userMode);
       }
-     navigate("/");
+      navigate("/");
       reset();
     } catch (error) {
       console.error("Error saving volunteer:", error);
     }
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setShowMenu(value.length > 0);
   };
 
   return (
@@ -742,7 +736,7 @@ const SingUpVolunteer = () => {
         <Card sx={styles.card}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ mb: 1 }}>
-              <Typography level="title-md">Personal Info</Typography>
+              <Typography level="title-md">פרופיל מתנדב</Typography>
             </Box>
             <Divider />
             <Stack spacing={2}>
@@ -775,7 +769,7 @@ const SingUpVolunteer = () => {
                       />
                       <label htmlFor="profile-upload">
                         <Button component="span" variant="outlined" size="sm">
-                          Upload Image
+                          העלאת תמונה
                         </Button>
                       </label>
                     </>
@@ -789,7 +783,7 @@ const SingUpVolunteer = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Full Name"
+                    label="שם מלא"
                     fullWidth
                     margin="normal"
                     error={!!errors.name}
@@ -803,7 +797,7 @@ const SingUpVolunteer = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="ID Number"
+                    label="תעודת זהות"
                     fullWidth
                     margin="normal"
                     error={!!errors.idNumber}
@@ -818,12 +812,12 @@ const SingUpVolunteer = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Phone"
+                    label="טלפון"
                     fullWidth
                     margin="normal"
                     error={!!errors.phone}
                     helperText={errors.phone?.message}
-                    
+
                   />
                 )}
               />
@@ -833,7 +827,7 @@ const SingUpVolunteer = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Email"
+                    label="מייל"
                     fullWidth
                     margin="normal"
                     error={!!errors.email}
@@ -849,7 +843,7 @@ const SingUpVolunteer = () => {
                   <TextField
                     {...field}
                     type="password"
-                    label="Password"
+                    label="סיסמא"
                     fullWidth
                     margin="normal"
                     error={!!errors.password}
@@ -867,58 +861,58 @@ const SingUpVolunteer = () => {
               <Controller
                 name="selectedVolunteerOptions"
                 control={control}
-                defaultValue={[]} 
+                defaultValue={[]}
                 render={({ field }) => (
                   <Autocomplete
                     multiple
                     options={allVolunteerOptions}
                     value={field.value}
-                    onChange={(_, newValue) => field.onChange(newValue)} 
+                    onChange={(_, newValue) => field.onChange(newValue)}
                     renderInput={(params) => (
                       <TextField {...params} label="תחומי התנדבות" disabled={isEditMode} />
                     )}
-                   
+
                   />
                 )}
               />
             </Box>
 
-        {/* בחירת ערים - Multi Select Autocomplete */}
-<Sheet variant="outlined" sx={{ mt: 3, p: 2 }}>
-  <Typography level="body-sm" sx={styles.title}>
-    בחירת ערים
-  </Typography>
+            {/* בחירת ערים - Multi Select Autocomplete */}
+            <Sheet variant="outlined" sx={{ mt: 3, p: 2 }}>
+              <Typography level="body-sm" sx={styles.title}>
+                בחירת ערים
+              </Typography>
 
-  <Controller
-    name="selectedCities"
-    control={control}
-    defaultValue={[]}
-    render={({ field }) => (
-      <Autocomplete
-        multiple
-        options={cities.map((city) => city.name)}
-        value={field.value || []}
-        onChange={(_, newValue) => field.onChange(newValue)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="בחר ערים"
-            error={!!errors.selectedCities}
-            helperText={errors.selectedCities?.message}
-            size="small"
-          />
-        )}
-        disableCloseOnSelect
-        clearOnEscape
-      />
-    )}
-  />
-</Sheet>
+              <Controller
+                name="selectedCities"
+                control={control}
+                defaultValue={[]}
+                render={({ field }) => (
+                  <Autocomplete
+                    multiple
+                    options={cities.map((city) => city.name)}
+                    value={field.value || []}
+                    onChange={(_, newValue) => field.onChange(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="בחר ערים"
+                        error={!!errors.selectedCities}
+                        helperText={errors.selectedCities?.message}
+                        size="small"
+                      />
+                    )}
+                    disableCloseOnSelect
+                    clearOnEscape
+                  />
+                )}
+              />
+            </Sheet>
 
             <CardOverflow sx={styles.cardOverflow}>
               <CardActions sx={styles.cardActions}>
                 <Button type="submit" size="sm" variant="solid">
-                  Save
+                   {isEditMode ? "עדכן" : "הירשם"}
                 </Button>
               </CardActions>
             </CardOverflow>

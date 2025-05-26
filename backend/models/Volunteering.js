@@ -11,7 +11,6 @@ const volunteeringSchema = new mongoose.Schema({
   description: String,
   origin: String,
   phone: String,
-  feedback: Number,
   idMaker: String,
   status: {
     type: String,

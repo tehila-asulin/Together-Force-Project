@@ -405,7 +405,7 @@ const Header = () => {
             sx={{ backgroundColor: "white", color: "black", minWidth: "90px" }}
             startIcon={<Info />}
           >
-            About
+            אודות
           </Button>
           <Button
             component={Link}
@@ -414,7 +414,7 @@ const Header = () => {
             sx={{ backgroundColor: "white", color: "black", minWidth: "90px" }}
             startIcon={<ContactMail />}
           >
-            Contact
+            מדריך הצטרפות
           </Button>
           <Button
             component={Link}
@@ -423,7 +423,7 @@ const Header = () => {
             sx={{ backgroundColor: "white", color: "black", minWidth: "90px" }}
             startIcon={<Home />}
           >
-            HomePage
+            דף הבית
           </Button>
         </Box>
 
@@ -431,7 +431,7 @@ const Header = () => {
           variant="h6"
           sx={{ color: "white", flexGrow: 1, textAlign: "center", whiteSpace: "nowrap" }}
         >
-          Together Force
+          יחד בעשייה🤝
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
