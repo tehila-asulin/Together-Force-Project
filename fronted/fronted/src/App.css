@@ -4,6 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
+body {
+  font-family: 'Rubik', sans-serif;
+}
+
 
 .logo {
   height: 6em;

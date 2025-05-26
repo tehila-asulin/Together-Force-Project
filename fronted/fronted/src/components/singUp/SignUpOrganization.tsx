@@ -509,7 +509,7 @@
 //     const { reset, handleSubmit, watch, control, formState: { errors } } = useForm({
 //         mode: "onBlur",
 //         resolver: zodResolver(profileOrganizationSchema),
-       
+
 //     defaultValues: (currentUser && "organizationNumber" in currentUser)
 //   ? {
 //       name: currentUser.name || "",
@@ -530,7 +530,7 @@
 //     },
 
 //     });
- 
+
 //     const dispatch = useDispatch();
 //     const userMode = useSelector(selectUserMode);
 //     const profileImage = watch("profileImage");
@@ -678,7 +678,7 @@ import {
   CardActions,
   Avatar
 } from "@mui/joy";
-import { TextField } from "@mui/material";
+import { TextField, Alert } from "@mui/material";
 import Button from "@mui/joy/Button";
 import { Controller, useForm } from "react-hook-form";
 import { styles } from "../../styles/style";
@@ -686,12 +686,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateOrganizationMutation, useEditOrganizationMutation } from '../../redux/slices/api/organizationApiSlice';
 import getProfileOrganizationSchema from "../../schemas/profileOrganizationSchema";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser, setCurrentUser, selectUserMode } from "../../redux/slices/togetherForceSlice";
+import { selectCurrentUser, setCurrentUser, selectUserMode, setUserMode } from "../../redux/slices/togetherForceSlice";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useState } from "react";
+import { UserModes } from "../../interface/UserModes";
+
 
 const SingUpOrganization = () => {
+  const [error, setError] = useState<string | null>(null);
   const currentUser = useSelector(selectCurrentUser);
   const userMode = useSelector(selectUserMode);
   const dispatch = useDispatch();
@@ -715,21 +718,21 @@ const SingUpOrganization = () => {
     resolver: zodResolver(getProfileOrganizationSchema(isEditMode)),
     defaultValues: isEditMode
       ? {
-          name: currentUser.name || "",
-          email: currentUser.email || "",
-          phone: currentUser.phone || "",
-          password: "",
-          profileImage: currentUser.profileImage || "",
-          organizationNumber: String(currentUser.organizationNumber) || "",
-        }
+        name: currentUser.name || "",
+        email: currentUser.email || "",
+        phone: currentUser.phone || "",
+        password: "",
+        profileImage: currentUser.profileImage || "",
+        organizationNumber: String(currentUser.organizationNumber) || "",
+      }
       : {
-          name: "",
-          email: "",
-          phone: "",
-          password: "",
-          profileImage: "",
-          organizationNumber: "",
-        },
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        profileImage: "",
+        organizationNumber: "",
+      },
   });
 
   const [CreateOrganizationMutation] = useCreateOrganizationMutation();
@@ -737,7 +740,7 @@ const SingUpOrganization = () => {
   const onSubmit = async (data: any) => {
     try {
       if (isEditMode && !data.password) {
-        delete data.password; 
+        delete data.password;
       }
 
       const formData = new FormData();
@@ -752,24 +755,31 @@ const SingUpOrganization = () => {
 
       if (isEditMode) {
         formData.append("_id", currentUser._id);
-       const result = await editOrganization(formData).unwrap();
+        const result = await editOrganization(formData).unwrap();
         dispatch(setCurrentUser(result));
         localStorage.setItem("user", JSON.stringify(result));
       } else {
-        const signUpResponse = await CreateOrganizationMutation(formData);
-        if (signUpResponse.data?.accessToken) {
-          Cookies.set("token", signUpResponse.data.accessToken, { expires: 7, path: "/" });
+        const signUpResponse = await CreateOrganizationMutation(formData).unwrap()
+        if (signUpResponse.accessToken) {
+          Cookies.set("token", signUpResponse.accessToken, { expires: 7, path: "/" });
         }
+        if (signUpResponse.organization) {
 
-        dispatch(setCurrentUser(signUpResponse.data?.organization));
-        localStorage.setItem("user", JSON.stringify(signUpResponse.data?.organization));
-        localStorage.setItem("userMode", userMode);
-       
+
+          dispatch(setCurrentUser(signUpResponse.organization));
+          dispatch(setUserMode(UserModes.Organization));
+          localStorage.setItem("user", JSON.stringify(signUpResponse.organization));
+          localStorage.setItem("userMode", UserModes.Organization);
+          navigate("/");
+          reset();
+        }
       }
-     navigate("/");
-      reset();
-    } catch (error) {
-      console.error("Error saving organization:", error);
+
+
+    } catch (error:any) {
+      console.log(error);
+      
+      setError(error.data.message)  
     }
   };
 
@@ -809,7 +819,7 @@ const SingUpOrganization = () => {
                       />
                       <label htmlFor="profile-upload">
                         <Button component="span" variant="outlined" size="sm">
-                         העלאת תמונה
+                          העלאת תמונה
                         </Button>
                       </label>
                     </>
@@ -896,7 +906,11 @@ const SingUpOrganization = () => {
                 )}
               />
             </Stack>
-
+            {error && (
+              <Box mt={2}>
+                <Alert severity="error">{error}</Alert>
+              </Box>
+            )}
             <CardActions sx={styles.cardActions}>
               <Button type="submit" size="sm" variant="solid">
                 {isEditMode ? "עדכן" : "הירשם"}

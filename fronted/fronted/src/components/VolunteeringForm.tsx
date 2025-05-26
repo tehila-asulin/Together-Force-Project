@@ -21,14 +21,15 @@ import { useEditOrganizationMutation } from "../redux/slices/api/organizationApi
 import { selectCurrentUser } from "../redux/slices/togetherForceSlice";
 import { useSelector } from "react-redux";
 import { Volunteering } from "../interface/Volunteering";
-import { TextField, Autocomplete } from "@mui/material";
+import { TextField, Autocomplete,Alert } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useNavigate } from "react-router";
-
+import { useState } from "react";
 const VolunteeringForm = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
   const {
     reset,
     handleSubmit,
@@ -70,8 +71,8 @@ const VolunteeringForm = () => {
       const res = await createNewVolunteering(updatedVo).unwrap();
       reset();
       navigate("/");
-    } catch (error) {
-      console.error("Error adding volunteering:", error);
+    } catch (error: any) {
+      setError(error)
     }
   };
 
@@ -200,7 +201,11 @@ const VolunteeringForm = () => {
                 )}
               />
             </LocalizationProvider>
-
+            {error && (
+              <Box mt={2}>
+                <Alert severity="error">{error}</Alert>
+              </Box>
+            )}
             <CardOverflow sx={styles.cardOverflow}>
               <CardActions sx={styles.cardActions}>
                 <Button type="submit" size="sm" variant="solid">
