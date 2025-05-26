@@ -8,7 +8,7 @@ import SingUpVolunteer from "../components/singUp/SingUpVolunteer";
 import SingUpOrganization from "../components/singUp/singUpOrganization"
 import SingIn from "../components/SingIn/SingIn";
 import VolunteeringForm from "../components/VolunteeringForm";
-import DetailsVolunteering from "../components/detailsVolunteering";
+import DetailsVolunteering from "../components/DetailsVolunteering";
 
 const router = createBrowserRouter([
     {

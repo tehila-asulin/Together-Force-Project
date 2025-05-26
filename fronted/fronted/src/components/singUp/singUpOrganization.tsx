@@ -779,7 +779,7 @@ const SingUpOrganization = () => {
         <Card sx={styles.card}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ mb: 1 }}>
-              <Typography level="title-md">Personal Info</Typography>
+              <Typography level="title-md">פרופיל ארגון</Typography>
             </Box>
             <Divider />
             <Stack spacing={2}>
@@ -809,7 +809,7 @@ const SingUpOrganization = () => {
                       />
                       <label htmlFor="profile-upload">
                         <Button component="span" variant="outlined" size="sm">
-                          Upload Image
+                         העלאת תמונה
                         </Button>
                       </label>
                     </>
@@ -823,7 +823,7 @@ const SingUpOrganization = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Full Name"
+                    label="שם הארגון"
                     fullWidth
                     margin="normal"
                     error={!!errors.name}
@@ -838,7 +838,7 @@ const SingUpOrganization = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="ID Number"
+                    label="מספר ארגון"
                     fullWidth
                     margin="normal"
                     error={!!errors.organizationNumber}
@@ -854,7 +854,7 @@ const SingUpOrganization = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Phone"
+                    label="טלפון"
                     fullWidth
                     margin="normal"
                     error={!!errors.phone}
@@ -869,7 +869,7 @@ const SingUpOrganization = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Email"
+                    label="מייל"
                     fullWidth
                     margin="normal"
                     error={!!errors.email}
@@ -886,7 +886,7 @@ const SingUpOrganization = () => {
                   <TextField
                     {...field}
                     type="password"
-                    label="Password"
+                    label="סיסמא"
                     fullWidth
                     margin="normal"
                     error={!!errors.password}

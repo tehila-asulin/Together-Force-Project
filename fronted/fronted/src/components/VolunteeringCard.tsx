@@ -249,10 +249,10 @@
 // };
 
 // export default VolunteeringCard;
-import * as React from 'react';
+
 import { useState, useEffect } from 'react';
 import Avatar from '@mui/joy/Avatar';
-import Chip from '@mui/joy/Chip';
+
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';

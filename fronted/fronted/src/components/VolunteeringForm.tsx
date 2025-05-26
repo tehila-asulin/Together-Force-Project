@@ -25,8 +25,10 @@ import { TextField, Autocomplete } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useNavigate } from "react-router";
 
 const VolunteeringForm = () => {
+    const navigate = useNavigate();
   const {
     reset,
     handleSubmit,
@@ -67,6 +69,7 @@ const VolunteeringForm = () => {
 
       const res = await createNewVolunteering(updatedVo).unwrap();
       reset();
+      navigate("/");
     } catch (error) {
       console.error("Error adding volunteering:", error);
     }

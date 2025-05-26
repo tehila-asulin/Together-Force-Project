@@ -418,73 +418,140 @@
 //   .catch((error) => {
 //     console.error(' MongoDB connection error:', error.message);
 //   });
-require("dotenv").config();
+// require("dotenv").config();
 
+// const express = require('express');
+// const mongoose = require('mongoose');
+// const cors = require("cors");
+// const bodyParser = require('body-parser');
+// const fileUpload = require('express-fileupload'); 
+// const jwt = require('jsonwebtoken');
+// const cookieParser = require('cookie-parser');
+
+// const volunteerRoutes = require('./routes/volunteerRoutes');
+// const volunteeringRoutes = require('./routes/volunteeringRoutes');
+// const organizationRoutes = require('./routes/organizationRoutes');
+// const authRoutes = require('./routes/authRoutes');
+
+// const corsOptions = require("./config/corsOptions");
+// const connectDB = require("./config/dbConn");
+
+// const { v2: cloudinary } = require('cloudinary');
+
+// // === Cloudinary Config ===
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.API_SECRET,
+// });
+
+// const app = express();
+// const PORT = process.env.PORT || 8000;
+
+// // === Middlewares ===
+// app.use(cors(corsOptions));
+// app.use(bodyParser.json());
+// app.use(express.json());
+
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: '/tmp/',
+//     createParentPath: true,
+//     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+//     abortOnLimit: true,
+//     safeFileNames: true,
+//     preserveExtension: true,
+//   })
+// );
+
+// app.use(cookieParser());
+
+// // === Routes ===
+// app.use('/api/volunteerRoutes', volunteerRoutes);
+// app.use('/api/volunteeringRoutes', volunteeringRoutes);
+// app.use('/api/organizationRoutes', organizationRoutes);
+// app.use('/api/auth', authRoutes);
+
+// // === Connect to DB and Start Server ===
+// connectDB();
+
+// mongoose.connect(process.env.CONNECTION_URL, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// })
+// .then(() => {
+//   app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+//   });
+// })
+// .catch((error) => {
+//   console.error('MongoDB connection error:', error.message);
+// });
+
+// backend/server.js
 const express = require('express');
-const mongoose = require('mongoose');
-const cors = require("cors");
+const http = require('http');
+const { Server } = require('socket.io');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload'); 
-const jwt = require('jsonwebtoken');
+const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
-
-const volunteerRoutes = require('./routes/volunteerRoutes');
-const volunteeringRoutes = require('./routes/volunteeringRoutes');
-const organizationRoutes = require('./routes/organizationRoutes');
-const authRoutes = require('./routes/authRoutes');
-
-const corsOptions = require("./config/corsOptions");
-const connectDB = require("./config/dbConn");
-
-const { v2: cloudinary } = require('cloudinary');
-
-// === Cloudinary Config ===
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const connectDB = require('./config/dbConn');
+const corsOptions = require('./config/corsOptions');
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const server = http.createServer(app);
 
-// === Middlewares ===
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+  },
+});
+
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.json());
-
 app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: '/tmp/',
     createParentPath: true,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    limits: { fileSize: 10 * 1024 * 1024 },
     abortOnLimit: true,
     safeFileNames: true,
     preserveExtension: true,
   })
 );
-
 app.use(cookieParser());
 
-// === Routes ===
+// controllers and routes
+const volunteeringController = require('./controllers/volunteeringController')(io);
+const organizationController=require('./controllers/organizationController')(io)
+const volunteerController=require('./controllers/volunteerController')(io)
+const volunteerRoutes = require('./routes/volunteerRoutes')(volunteerController)
+const volunteeringRoutes = require('./routes/volunteeringRoutes')(volunteeringController);
+const organizationRoutes = require('./routes/organizationRoutes')(organizationController)
+const authRoutes = require('./routes/authRoutes');
+
 app.use('/api/volunteerRoutes', volunteerRoutes);
 app.use('/api/volunteeringRoutes', volunteeringRoutes);
 app.use('/api/organizationRoutes', organizationRoutes);
 app.use('/api/auth', authRoutes);
 
-// === Connect to DB and Start Server ===
 connectDB();
 
-mongoose.connect(process.env.CONNECTION_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
   });
-})
-.catch((error) => {
-  console.error('MongoDB connection error:', error.message);
 });
+
+const PORT = process.env.PORT || 9100;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+module.exports = io;
