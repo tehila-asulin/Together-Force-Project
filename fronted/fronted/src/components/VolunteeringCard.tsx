@@ -325,7 +325,7 @@ const VolunteeringCard = ({ volunteering }: Props) => {
       await editVolunteering(updatedVolunteering).unwrap();
       alert("ההתנדבות בוטלה בהצלחה!");
     } catch (error) {
-      console.error("Error cancelling volunteering:", error);
+      console.error("error cancelling volunteering:", error);
       alert("אירעה שגיאה בביטול ההתנדבות");
     }
   };
@@ -339,7 +339,7 @@ const VolunteeringCard = ({ volunteering }: Props) => {
       await editVolunteering(updatedVolunteering).unwrap();
       alert("סימנת את ההתנדבות כהושלמה");
     } catch (error) {
-      console.error("Error completing volunteering:", error);
+      console.error("error completing volunteering:", error);
       alert("אירעה שגיאה");
     }
   };

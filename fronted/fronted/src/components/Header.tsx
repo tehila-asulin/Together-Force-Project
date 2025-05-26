@@ -331,6 +331,7 @@ import {
 } from "../redux/slices/togetherForceSlice";
 import { UserModes } from "../interface/UserModes";
 import Cookies from "js-cookie";
+import logo from "../assets/logo.png"; 
 
 const Header = () => {
   const [signupAnchorEl, setSignupAnchorEl] = useState<null | HTMLElement>(null);
@@ -386,6 +387,7 @@ const Header = () => {
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "rgb(0, 104, 245)", width: "100%", top: 0 }}>
+      
       <Toolbar
         sx={{
           display: "flex",
@@ -398,6 +400,18 @@ const Header = () => {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+           <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center", height: "64px" }}>
+  <Box component="img"
+    src={logo}
+    alt="לוגו יחד בעשייה"
+    sx={{
+      height: "100px",
+      maxHeight: "100%",
+      objectFit: "contain"
+    }}
+  />
+</Box>
+
           <Button
             component={Link}
             to="/about"
@@ -427,12 +441,8 @@ const Header = () => {
           </Button>
         </Box>
 
-        <Typography
-          variant="h6"
-          sx={{ color: "white", flexGrow: 1, textAlign: "center", whiteSpace: "nowrap" }}
-        >
-          יחד בעשייה🤝
-        </Typography>
+   
+
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {currentUser ? (
@@ -455,6 +465,26 @@ const Header = () => {
                   <MenuItem onClick={() => { setProfileMenuAnchorEl(null); handleLogout(); }}>
                     התנתקות
                   </MenuItem>
+                  {userMode === UserModes.Organization &&( <MenuItem
+                  component={Link}
+                  to="/myVolunteering"
+                >
+                  להתנדבויות שלי
+                </MenuItem>)}
+                   {userMode === UserModes.Volunteer &&( <MenuItem
+                  component={Link}
+                  to="/myVolunteering"
+                >
+                להתנדבויות המתאימות לי
+                </MenuItem>)}
+               {userMode === UserModes.Organization && (
+                      <MenuItem
+                        component={Link}
+                        to="/addVolunteering"
+                      >
+                        בקשת התנדבות חדשה
+                      </MenuItem>
+                    )}
                 </Menu>
               </Box>
             </>
@@ -465,22 +495,22 @@ const Header = () => {
                 sx={{ backgroundColor: "white", color: "black", minWidth: "80px" }}
                 onClick={handleSigninClick}
               >
-                Sign In
+                התחברות
               </Button>
               <Menu anchorEl={signinAnchorEl} open={signinOpen} onClose={() => handleClose()}>
                 <MenuItem
                   component={Link}
                   to="/signin/volunteer"
-                  onClick={() => handleClose(UserModes.Volunteer)}
+                  
                 >
-                  Volunteer
+                  מתנדב
                 </MenuItem>
                 <MenuItem
                   component={Link}
                   to="/signin/organization"
-                  onClick={() => handleClose(UserModes.Organization)}
+                   
                 >
-                  Organization
+                  ארגון
                 </MenuItem>
               </Menu>
 
@@ -489,22 +519,22 @@ const Header = () => {
                 sx={{ backgroundColor: "white", color: "black", minWidth: "80px" }}
                 onClick={handleSignupClick}
               >
-                Sign Up
+                הרשמה
               </Button>
               <Menu anchorEl={signupAnchorEl} open={signupOpen} onClose={() => handleClose()}>
                 <MenuItem
                   component={Link}
                   to="/signup/volunteer"
-                  onClick={() => handleClose(UserModes.Volunteer)}
+                  
                 >
-                  Volunteer
+                  מתנדב
                 </MenuItem>
                 <MenuItem
                   component={Link}
                   to="/signup/organization"
-                  onClick={() => handleClose(UserModes.Organization)}
+                
                 >
-                  Organization
+                  ארגון
                 </MenuItem>
               </Menu>
             </>

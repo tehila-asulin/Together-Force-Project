@@ -5,18 +5,18 @@
 
 // // // const register = async (req, res) => {
 // // //     const { name, email, phone, profileImage, password, organizationNumber } = req.body;
-  
+
 // // //     if (!name || !password) {
 // // //       return res.status(400).json({ message: 'All fields are required' });
 // // //     }
-  
+
 // // //     const duplicate = await Organization.findOne({ name }).lean();
 // // //     if (duplicate) {
 // // //       return res.status(409).json({ message: "Duplicate organization name" });
 // // //     }
-  
+
 // // //     const hashedPwd = await bcrypt.hash(password, 10);
-  
+
 // // //     const organizationObject = {
 // // //       name,
 // // //       email,
@@ -25,9 +25,9 @@
 // // //       password: hashedPwd,
 // // //       organizationNumber
 // // //     };
-  
+
 // // //     const organization = await Organization.create(organizationObject);
-  
+
 // // //     if (organization) {
 // // //       return res.status(201).json({ message: `New Organization ${organization.name} created` });
 // // //     } else {
@@ -47,19 +47,19 @@
 // // //       password
 // // //     } = req.body;
 
-    
-  
+
+
 // // //     if (!name || !password) {
 // // //       return res.status(400).json({ message: 'All fields are required' });
 // // //     }
-  
+
 // // //     const duplicate = await Volunteer.findOne({ email }).lean();
 // // //     if (duplicate) {
 // // //       return res.status(409).json({ message: "Duplicate Volunteer email" });
 // // //     }
-  
+
 // // //     const hashedPwd = await bcrypt.hash(password, 10);
-  
+
 // // //     const volunteerObject = {
 // // //       name,
 // // //       email,
@@ -71,9 +71,9 @@
 // // //       history: history || [],
 // // //       password:hashedPwd
 // // //     } 
-  
+
 // // //     const volunteer = await Volunteer.create(volunteerObject);
-  
+
 // // //     if (volunteer) {
 // // //       return res.status(201).json({ message: `New Volunteer ${volunteer.name} created` });
 // // //     } else {
@@ -84,20 +84,20 @@
 
 // // // const loginV = async (req, res) => {
 // // //   const { email, password } = req.body
-  
+
 // // //   if (!email || !password) {
 // // //     return res.status(400).json({ message: 'All fields are required' })
 // // //   }
 
 // // //   const foundVolunteer = await Volunteer.findOne({ email }).lean()
-  
+
 
 // // //   if (!foundVolunteer) {
 // // //     return res.status(401).json({ message: 'Unauthorized' });
 // // //   }
 
 // // //   const match = await bcrypt.compare(password, foundVolunteer.password)
-  
+
 
 // // //   if (!match) {
 // // //     console.log(" סיסמה לא נכונה")
@@ -122,20 +122,20 @@
 
 // // // const login = async (req, res) => {
 // // //   const { email, password } = req.body
-  
+
 // // //   if (!email || !password) {
 // // //     return res.status(400).json({ message: 'All fields are required' })
 // // //   }
 
 // // //   const foundOrganization = await Organization.findOne({ email }).lean()
-  
+
 
 // // //   if (!foundOrganization) {
 // // //     return res.status(401).json({ message: 'Unauthorized' });
 // // //   }
 
 // // //   const match = await bcrypt.compare(password, foundOrganization.password)
-  
+
 
 // // //   if (!match) {
 // // //     console.log(" סיסמה לא נכונה")
@@ -695,64 +695,67 @@ const cloudinary = require('../config/cloudinary'); // חיבור ל-Cloudinary
 
 
 const register = async (req, res) => {
-    console.log(req.files.profileImage);
+  console.log(req.files.profileImage);
 
-    const { name, email, phone, password, organizationNumber } = req.body;
+  const { name, email, phone, password, organizationNumber } = req.body;
 
-    if (!name || !password) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
+  if (!name || !password) {
+    return res.status(400).json({ message: 'כל השדות הם חובה' });
+  }
+  const emailExists = await Organization.findOne({ email }).lean();
+  if (emailExists) {
+    return res.status(409).json({ message: "קיים כבר ארגון עם מייל זהה" });
+  }
 
-    const duplicate = await Organization.findOne({ name }).lean();
-    if (duplicate) {
-        return res.status(409).json({ message: "Duplicate organization name" });
-    }
+  const numberExists = await Organization.findOne({ organizationNumber }).lean();
+  if (numberExists) {
+    return res.status(409).json({ message: "קיים כבר ארגון עם מספר זהה" });
+  }
 
-    let profileImageUrl = "";
-    if (req.files && req.files.profileImage) {
-        try {
-            // העלאת התמונה ל-Cloudinary
-            const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
-                folder: "organizations"
-            });
-            profileImageUrl = result.secure_url; // שומרים את ה-URL המלא
-        } catch (err) {
-            console.error("Cloudinary upload error:", err);
-            return res.status(500).json({ message: "Error uploading image to Cloudinary" });
-        }
-    }
 
-    const hashedPwd = await bcrypt.hash(password, 10);
-   
-    const organizationObject = {
-        name,
-        email,
-        phone,
-        profileImage: profileImageUrl,
-        password: hashedPwd,
-        organizationNumber
-    };
-    const organization = await Organization.create(organizationObject);
+  let profileImageUrl = "";
+  if (req.files && req.files.profileImage) {
     try {
-        if(organization)
-        {
-          const organizationInfo = {
-      _id:organization._id,
-      name: organization.name,
-      email: organization.email,
-      phone: organization.phone,
-      profileImage: organization.profileImage,
-      organizationNumber: organization.organizationNumber,
-      history: organization.history,
-    };
-      const accessToken=jwt.sign(organizationInfo,process.env.ACCESS_TOKEN_SECRET)
-      return res.status(201).json({accessToken:accessToken, organization:organizationInfo})
-        }
-           
+      // העלאת התמונה ל-Cloudinary
+      const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
+        folder: "organizations"
+      });
+      profileImageUrl = result.secure_url;
     } catch (err) {
-        console.error("DB Save Error:", err);
-        return res.status(400).json({ message: 'Invalid Organization received' });
+      return res.status(500).json({ message: "שגיאה בהעלאת תמונה" });
     }
+  }
+
+  const hashedPwd = await bcrypt.hash(password, 10);
+
+  const organizationObject = {
+    name,
+    email,
+    phone,
+    profileImage: profileImageUrl,
+    password: hashedPwd,
+    organizationNumber
+  };
+  const organization = await Organization.create(organizationObject);
+  try {
+    if (organization) {
+      const organizationInfo = {
+        _id: organization._id,
+        name: organization.name,
+        email: organization.email,
+        phone: organization.phone,
+        profileImage: organization.profileImage,
+        organizationNumber: organization.organizationNumber,
+        history: organization.history,
+      };
+      const accessToken = jwt.sign(organizationInfo, process.env.ACCESS_TOKEN_SECRET)
+      return res.status(201).json({ accessToken: accessToken, organization: organizationInfo })
+    }
+
+  } catch (err) {
+    console.error("DB Save Error:", err);
+    return res.status(400).json({ message: 'נתוני הארגון שהתקבלו אינם תקינים' });
+  }
 };
 
 
@@ -769,28 +772,33 @@ const registerV = async (req, res) => {
       password
     } = req.body;
 
-const selectedVolunteerOptions = JSON.parse(req.body.selectedVolunteerOptions);
-const selectedCities = JSON.parse(req.body.selectedCities);
+    const selectedVolunteerOptions = JSON.parse(req.body.selectedVolunteerOptions);
+    const selectedCities = JSON.parse(req.body.selectedCities);
     if (!name || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ message: 'כל השדות חובה' });
     }
 
-    const duplicate = await Volunteer.findOne({ email }).lean();
-    if (duplicate) {
-      return res.status(409).json({ message: "Duplicate Volunteer email" });
+    const emailExists = await Volunteer.findOne({ email }).lean();
+    if (emailExists) {
+      return res.status(409).json({ message: "קיים כבר מתנדב עם מייל זהה" });
     }
+
+    const idNumberExists = await Volunteer.findOne({ idNumber }).lean();
+    if (idNumberExists) {
+      return res.status(409).json({ message: "קיים כבר מתנדב עם תעודת זהות זהה" });
+    }
+
     let profileImageUrl = "";
     if (req.files && req.files.profileImage) {
-        try {
-            // העלאת התמונה ל-Cloudinary
-            const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
-                folder: "volunteers"
-            });
-            profileImageUrl = result.secure_url; // שומרים את ה-URL המלא
-        } catch (err) {
-            console.error("Cloudinary upload error:", err);
-            return res.status(500).json({ message: "Error uploading image to Cloudinary" });
-        }
+      try {
+        // העלאת התמונה ל-Cloudinary
+        const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
+          folder: "volunteers"
+        });
+        profileImageUrl = result.secure_url; // שומרים את ה-URL המלא
+      } catch (err) {
+        return res.status(500).json({ message: "שגיאה בהעלאת תמונה" });
+      }
     }
     const hashedPwd = await bcrypt.hash(password, 10);
 
@@ -807,28 +815,27 @@ const selectedCities = JSON.parse(req.body.selectedCities);
     };
 
     const volunteer = await Volunteer.create(volunteerObject);
- 
+
     if (volunteer) {
       const volunteerInfo = {
-      _id:volunteer._id,
-      name: volunteer.name,
-      email: volunteer.email,
-      phone: volunteer.phone,
-      profileImage: volunteer.profileImage,
-      idNumber: volunteer.idNumber,
-      selectedVolunteerOptions: volunteer.selectedVolunteerOptions,
-      selectedCities: volunteer.selectedCities,
-      history: volunteer.history,
-      
-    };
-     const accessToken=jwt.sign(volunteerInfo,process.env.ACCESS_TOKEN_SECRET)
-      return res.status(201).json({accessToken:accessToken, volunteer:volunteerInfo})
+        _id: volunteer._id,
+        name: volunteer.name,
+        email: volunteer.email,
+        phone: volunteer.phone,
+        profileImage: volunteer.profileImage,
+        idNumber: volunteer.idNumber,
+        selectedVolunteerOptions: volunteer.selectedVolunteerOptions,
+        selectedCities: volunteer.selectedCities,
+        history: volunteer.history,
+
+      };
+      const accessToken = jwt.sign(volunteerInfo, process.env.ACCESS_TOKEN_SECRET)
+      return res.status(201).json({ accessToken: accessToken, volunteer: volunteerInfo })
     } else {
-      return res.status(400).json({ message: 'Invalid Volunteer received' });
+      return res.status(400).json({ message: 'נתוני המתנדב שהתקבלו אינם תקינים' });
     }
   } catch (error) {
-    console.error("Error registering volunteer:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "שגיאת שרת" });
   }
 };
 
@@ -838,17 +845,17 @@ const loginV = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ message: 'כל השדות חובה' });
     }
 
     const foundVolunteer = await Volunteer.findOne({ email }).lean();
     if (!foundVolunteer) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: 'לא נמצא מתנדב עם פרטים אלו' });
     }
 
     const match = await bcrypt.compare(password, foundVolunteer.password);
     if (!match) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: 'לא נמצא מתנדב עם פרטים אלו' });
     }
 
     const volunteerInfo = {
@@ -864,11 +871,10 @@ const loginV = async (req, res) => {
 
     const accessToken = jwt.sign(volunteerInfo, process.env.ACCESS_TOKEN_SECRET);
     // res.json({ accessToken, user: foundVolunteer });
-    
-       res.json({accessToken:accessToken, volunteer:foundVolunteer})
+
+    res.json({ accessToken: accessToken, volunteer: foundVolunteer })
   } catch (error) {
-    console.error("Error logging in volunteer:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "שגיאת שרת" });
   }
 };
 
@@ -879,21 +885,21 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ message: 'כל השדות הינם חובה' });
     }
 
     const foundOrganization = await Organization.findOne({ email }).lean();
     if (!foundOrganization) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: 'לא נמצא ארגון עם פרטים  אלו' });
     }
 
     const match = await bcrypt.compare(password, foundOrganization.password);
     if (!match) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: 'לא נמצא ארגון עם פרטים  אלו' });
     }
 
     const organizationInfo = {
-      _id:foundOrganization._id,
+      _id: foundOrganization._id,
       name: foundOrganization.name,
       email: foundOrganization.email,
       phone: foundOrganization.phone,
@@ -903,10 +909,9 @@ const login = async (req, res) => {
     };
 
     const accessToken = jwt.sign(organizationInfo, process.env.ACCESS_TOKEN_SECRET);
-       res.json({accessToken:accessToken, organization:organizationInfo})
+    res.json({ accessToken: accessToken, organization: organizationInfo })
   } catch (error) {
-    console.error("Error logging in organization:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "שגיאת שרת" });
   }
 };
-module.exports = {register,registerV,login,loginV};
+module.exports = { register, registerV, login, loginV };
