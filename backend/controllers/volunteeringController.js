@@ -210,32 +210,46 @@ const Volunteering = require('../models/Volunteering');
 
 module.exports = (io) => {
   return {
-    getFilteredVolunteering: async (req, res) => {
-      const { organizationNumber, selectedCities = [], selectedOptions = [] } = req.body;
+   getFilteredVolunteering: async (req, res) => {
+  const {
+    organizationNumber,
+    selectedCities = [],
+    selectedOptions = [],
+    volunteerId
+  } = req.body;
 
-      try {
-        let filter = {};
-          filter.deadline = { $gte: new Date() };
-        if (organizationNumber) {
-          filter.byOrganizationNumber = organizationNumber;
-        } else {
-          if (selectedCities.length > 0) {
-            filter.origin = { $in: selectedCities };
-          }
-          if (selectedOptions.length > 0) {
-            filter.title = { $in: selectedOptions };
-          }
-          filter.status = { $ne: "COMPLETED" };
+  try {
+    const filter = {};
+
+    
+    if (volunteerId) {
+      filter.idMaker = volunteerId; 
+    } else {
+      filter.deadline = { $gte: new Date() };
+
+      if (organizationNumber) {
+        filter.byOrganizationNumber = organizationNumber;
+      } else {
+        if (selectedCities.length > 0) {
+          filter.origin = { $in: selectedCities };
+        }
+        if (selectedOptions.length > 0) {
+          filter.title = { $in: selectedOptions };
         }
 
-        const filtered = await Volunteering.find(filter);         
-        io.emit('VolunteeringRoom');
-        res.json(filtered);
-      } catch (error) {
-        console.error('הסינון נכשל:', error);
-        res.status(500).json({ message: 'הסינון נכשל' });
+      
+        filter.status = "PENDING";
       }
-    },
+    }
+
+    const filtered = await Volunteering.find(filter);
+    io.emit("VolunteeringRoom");
+    res.json(filtered);
+  } catch (error) {
+    console.error("הסינון נכשל:", error);
+    res.status(500).json({ message: "הסינון נכשל" });
+  }
+},
 
     addVolunteering: async (req, res) => {
       try {

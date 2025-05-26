@@ -47,19 +47,27 @@ import { Volunteering } from '../interface/Volunteering';
 import socket from '../socket/socket';
 import { useDispatch } from 'react-redux';
 import  volunteeringApiSlice  from '../redux/slices/api/volunteeringApiSlice';
-
+import { useParams } from "react-router";
 
 const VolunteeringList = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
+  const { filterByCitiesSkill } = useParams();
 
   const requestParams =
     currentUser && 'organizationNumber' in currentUser
       ? { organizationNumber: currentUser.organizationNumber }
-      : currentUser &&  'selectedCities' in currentUser&&'selectedVolunteerOptions' in currentUser
+      : filterByCitiesSkill === 'true' &&
+        currentUser &&
+        'selectedCities' in currentUser &&
+        'selectedVolunteerOptions' in currentUser
       ? {
           selectedCities: currentUser.selectedCities,
           selectedOptions: currentUser.selectedVolunteerOptions,
+        }
+      : currentUser && '_id' in currentUser
+      ? {
+          volunteerId: currentUser._id,
         }
       : {};
 

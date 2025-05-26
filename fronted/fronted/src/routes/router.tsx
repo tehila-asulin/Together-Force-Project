@@ -11,6 +11,7 @@ import VolunteeringForm from "../components/VolunteeringForm";
 import DetailsVolunteering from "../components/DetailsVolunteering";
 import VolunteeringList from "../components/VolunteeringList";
 
+
 const router = createBrowserRouter([
     {
         element: <AppLayout/>, 
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
     {path:"/signin/:userModeLog", element:<SignIn/>},
     {path:"/addVolunteering", element:<VolunteeringForm/>},
     {path:"/detailsVolunteering/:volunteeringId", element:<DetailsVolunteering/>},
-    {path: "/myVolunteering", element:<VolunteeringList/>}    
+    {path:"/VolunteeringList/:filterByCitiesSkill", element:<VolunteeringList/>} 
 ]   
     } 
 ]);

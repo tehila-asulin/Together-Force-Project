@@ -465,17 +465,23 @@ const Header = () => {
                   <MenuItem onClick={() => { setProfileMenuAnchorEl(null); handleLogout(); }}>
                     התנתקות
                   </MenuItem>
-                  {userMode === UserModes.Organization &&( <MenuItem
-                  component={Link}
-                  to="/myVolunteering"
-                >
-                  להתנדבויות שלי
-                </MenuItem>)}
                    {userMode === UserModes.Volunteer &&( <MenuItem
                   component={Link}
-                  to="/myVolunteering"
+                  to="/VolunteeringList/true"
                 >
                 להתנדבויות המתאימות לי
+                </MenuItem>)}
+                  {userMode === UserModes.Volunteer &&( <MenuItem
+                  component={Link}
+                  to="/VolunteeringList/false"
+                >
+                להסטוריית ההתנדבויות שלי
+                </MenuItem>)}
+                  {userMode === UserModes.Organization &&( <MenuItem
+                  component={Link}
+                  to="/VolunteeringList/false"
+                >
+                להסטוריית ההתנדבויות שהוספתי
                 </MenuItem>)}
                {userMode === UserModes.Organization && (
                       <MenuItem
