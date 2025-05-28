@@ -225,19 +225,16 @@ module.exports = (io) => {
     if (volunteerId) {
       filter.idMaker = volunteerId; 
     } else {
-      filter.deadline = { $gte: new Date() };
-
       if (organizationNumber) {
         filter.byOrganizationNumber = organizationNumber;
       } else {
+        filter.deadline = { $gte: new Date() };
         if (selectedCities.length > 0) {
           filter.origin = { $in: selectedCities };
         }
         if (selectedOptions.length > 0) {
           filter.title = { $in: selectedOptions };
         }
-
-      
         filter.status = "PENDING";
       }
     }

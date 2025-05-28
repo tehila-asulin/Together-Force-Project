@@ -10,23 +10,25 @@ import SignIn from "../components/SingIn/SignIn";
 import VolunteeringForm from "../components/VolunteeringForm";
 import DetailsVolunteering from "../components/DetailsVolunteering";
 import VolunteeringList from "../components/VolunteeringList";
+import HistoryVolunteer from "../components/HistoryVolunteer";
 
 
 const router = createBrowserRouter([
     {
-        element: <AppLayout/>, 
+        element: <AppLayout />,
         children: [
-    {index: true,element: <HomePage />},
-    {path:"/about", element:<About/>},
-    {path:"/contact", element:<GuidePage/>},
-    {path:"/about", element:<About/>},
-    {path:"/signup/volunteer", element:<SignUpVolunteer/>},
-    {path:"/signup/organization", element:<SignUpOrganization/>},
-    {path:"/signin/:userModeLog", element:<SignIn/>},
-    {path:"/addVolunteering", element:<VolunteeringForm/>},
-    {path:"/detailsVolunteering/:volunteeringId", element:<DetailsVolunteering/>},
-    {path:"/VolunteeringList/:filterByCitiesSkill", element:<VolunteeringList/>} 
-]   
+            { index: true, element: <HomePage /> },
+            { path: "/about", element: <About /> },
+            { path: "/contact", element: <GuidePage /> },
+            { path: "/about", element: <About /> },
+            { path: "/signup/volunteer", element: <SignUpVolunteer /> },
+            { path: "/signup/organization", element: <SignUpOrganization /> },
+            { path: "/signin/:userModeLog", element: <SignIn /> },
+            { path: "/addVolunteering", element: <VolunteeringForm /> },
+            { path: "/detailsVolunteering/:volunteeringId", element: <DetailsVolunteering /> },
+            { path: "/VolunteeringList", element: <VolunteeringList filterByCitiesSkills={false} /> },   
+            {path: "/myVolunteering", element:<HistoryVolunteer/> }     
+        ]    
     } 
 ]);
 
