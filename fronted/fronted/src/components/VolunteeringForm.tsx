@@ -42,7 +42,7 @@ const VolunteeringForm = () => {
     defaultValues: {
       title: "",
       description: "",
-      origin: "", // עיר אחת בלבד - מחרוזת
+      origin: "", 
       phone: "",
       isDone: false,
       deadline: undefined,

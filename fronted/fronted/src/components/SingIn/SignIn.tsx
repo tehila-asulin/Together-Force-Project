@@ -292,7 +292,7 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const { userModeLog } = useParams();
 
-  // המרה ל־enum
+
   const userMode =
     userModeLog === "volunteer"
       ? UserModes.Volunteer

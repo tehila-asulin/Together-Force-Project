@@ -331,7 +331,8 @@ import {
 } from "../redux/slices/togetherForceSlice";
 import { UserModes } from "../interface/UserModes";
 import Cookies from "js-cookie";
-import logo from "../assets/logo.png"; 
+import logo from "../assets/logo.png";
+import logoNav from "../assets/logoNav.png";
 
 const Header = () => {
   const [signupAnchorEl, setSignupAnchorEl] = useState<null | HTMLElement>(null);
@@ -387,7 +388,7 @@ const Header = () => {
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "rgb(0, 104, 245)", width: "100%", top: 0 }}>
-      
+
       <Toolbar
         sx={{
           display: "flex",
@@ -400,17 +401,17 @@ const Header = () => {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-           <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center", height: "64px" }}>
-  <Box component="img"
-    src={logo}
-    alt="לוגו יחד בעשייה"
-    sx={{
-      height: "100px",
-      maxHeight: "100%",
-      objectFit: "contain"
-    }}
-  />
-</Box>
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center", height: "64px" }}>
+            <Box component="img"
+              src={logoNav}
+              alt="לוגו יחד בעשייה"
+              sx={{
+                height: "100px",
+                maxHeight: "100%",
+                objectFit: "contain"
+              }}
+            />
+          </Box>
 
           <Button
             component={Link}
@@ -439,11 +440,8 @@ const Header = () => {
           >
             דף הבית
           </Button>
+
         </Box>
-
-   
-
-
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {currentUser ? (
             <>
@@ -465,26 +463,7 @@ const Header = () => {
                   <MenuItem onClick={() => { setProfileMenuAnchorEl(null); handleLogout(); }}>
                     התנתקות
                   </MenuItem>
-                  {userMode === UserModes.Organization &&( <MenuItem
-                  component={Link}
-                  to="/myVolunteering"
-                >
-                  להתנדבויות שלי
-                </MenuItem>)}
-                   {userMode === UserModes.Volunteer &&( <MenuItem
-                  component={Link}
-                  to="/myVolunteering"
-                >
-                להתנדבויות המתאימות לי
-                </MenuItem>)}
-               {userMode === UserModes.Organization && (
-                      <MenuItem
-                        component={Link}
-                        to="/addVolunteering"
-                      >
-                        בקשת התנדבות חדשה
-                      </MenuItem>
-                    )}
+
                 </Menu>
               </Box>
             </>
@@ -501,14 +480,14 @@ const Header = () => {
                 <MenuItem
                   component={Link}
                   to="/signin/volunteer"
-                  
+
                 >
                   מתנדב
                 </MenuItem>
                 <MenuItem
                   component={Link}
                   to="/signin/organization"
-                   
+
                 >
                   ארגון
                 </MenuItem>
@@ -525,14 +504,14 @@ const Header = () => {
                 <MenuItem
                   component={Link}
                   to="/signup/volunteer"
-                  
+
                 >
                   מתנדב
                 </MenuItem>
                 <MenuItem
                   component={Link}
                   to="/signup/organization"
-                
+
                 >
                   ארגון
                 </MenuItem>

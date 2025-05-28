@@ -38,7 +38,7 @@
 // };
 
 // export default VolunteeringList;
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import VolunteeringCard from './VolunteeringCard';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../redux/slices/togetherForceSlice';
@@ -47,26 +47,66 @@ import { Volunteering } from '../interface/Volunteering';
 import socket from '../socket/socket';
 import { useDispatch } from 'react-redux';
 import  volunteeringApiSlice  from '../redux/slices/api/volunteeringApiSlice';
-
-
-const VolunteeringList = () => {
+interface Props {
+  filterByCitiesSkills: Boolean;
+}
+const VolunteeringList = ({filterByCitiesSkills}:Props) => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
+  const [params,setParams]=useState<any>()
+  const getParams = () => {
+      if (!currentUser) return {};
 
-  const requestParams =
-    currentUser && 'organizationNumber' in currentUser
-      ? { organizationNumber: currentUser.organizationNumber }
-      : currentUser &&  'selectedCities' in currentUser&&'selectedVolunteerOptions' in currentUser
-      ? {
+      if ('organizationNumber' in currentUser) {
+        return { organizationNumber: currentUser.organizationNumber };
+      }
+
+      if (
+        filterByCitiesSkills === false &&
+        'selectedCities' in currentUser &&
+        'selectedVolunteerOptions' in currentUser
+      ) {
+        return {
           selectedCities: currentUser.selectedCities,
           selectedOptions: currentUser.selectedVolunteerOptions,
-        }
-      : {};
+        };
+      }
+
+      if (filterByCitiesSkills === true&&'_id' in currentUser) {
+        return { volunteerId: currentUser._id };
+      }
+
+      return {};
+    };
+   useEffect(() => {
+  const newParams = getParams();
+  setParams(newParams);
+}, [filterByCitiesSkills, currentUser]);
+
+  // const requestParams =
+  // console.log(filterByCitiesSkill);
+  
+  //   currentUser && 'organizationNumber' in currentUser
+  //     ? { organizationNumber: currentUser.organizationNumber }
+  //     : filterByCitiesSkill === 'true' &&
+  //       currentUser &&
+  //       'selectedCities' in currentUser &&
+  //       'selectedVolunteerOptions' in currentUser
+  //     ? {
+  //         selectedCities: currentUser.selectedCities,
+  //         selectedOptions: currentUser.selectedVolunteerOptions,
+  //       }
+  //     : currentUser && '_id' in currentUser
+  //     ? {
+  //         volunteerId: currentUser._id,
+  //       }
+  //     : {};
 
   const { data: filteredVolunteering, isLoading, isError, error } =
-    useGetFilteredVolunteeringQuery(requestParams);
+    useGetFilteredVolunteeringQuery(params);
 
   useEffect(() => {
+    
     const handleNewVolunteering = () => {
     
       dispatch(volunteeringApiSlice.util.invalidateTags(['TogetherForce']));
@@ -83,13 +123,18 @@ const VolunteeringList = () => {
   if (isError) return <p>שגיאה: {(error as any)?.message || 'לא ידועה'}</p>;
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-      {filteredVolunteering?.map((v: Volunteering) => (
-        <VolunteeringCard key={v._id} volunteering={v} />
-      ))}
-    </div>
-  );
+  <>
+    {filteredVolunteering && filteredVolunteering.length > 0 ? (
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+        {filteredVolunteering.map((v: Volunteering) => (
+          <VolunteeringCard key={v._id} volunteering={v} />
+        ))}
+      </div>
+    ) : (
+      <p>לא נמצאו התנדבויות</p>
+    )}
+  </>
+);
 };
 
 export default VolunteeringList;
-
