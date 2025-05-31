@@ -220,8 +220,6 @@ module.exports = (io) => {
 
   try {
     const filter = {};
-
-    
     if (volunteerId) {
       filter.idMaker = volunteerId; 
     } else {
@@ -240,7 +238,6 @@ module.exports = (io) => {
     }
 
     const filtered = await Volunteering.find(filter);
-    io.emit("VolunteeringRoom");
     res.json(filtered);
   } catch (error) {
     console.error("הסינון נכשל:", error);
@@ -251,8 +248,6 @@ module.exports = (io) => {
     addVolunteering: async (req, res) => {
       try {
         const volunteering = await Volunteering.create(req.body);
-
-        
         io.emit('VolunteeringRoom', volunteering);
 
         res.json(volunteering);
@@ -269,7 +264,7 @@ module.exports = (io) => {
         if (!deletedVolunteering) {
           return res.status(404).json({ message: 'ההתנדבות לא נמצאה' });
         }
-          io.emit('VolunteeringRoom', deletedVolunteering);
+        io.emit('VolunteeringRoom', deletedVolunteering);
         res.json({ message: 'ההתנדבות נמחקה בהצלחה' });
       } catch (error) {
         console.error('נכשל במחיקת ההתנדבות:', error);
@@ -279,12 +274,12 @@ module.exports = (io) => {
 
     updateVolunteering: async (req, res) => {
       const { id } = req.params;
-      const { title, description, origin, phone, status, idMaker } = req.body;
+      const { title, description, origin, phone, status, idMaker,rating } = req.body;
       
       try {
         const updatedVolunteering = await Volunteering.findOneAndUpdate(
           { _id: id },
-          { title, description, origin, phone, idMaker, status },
+          { title, description, origin, phone, idMaker, status ,rating},
           { new: true }
         );
 

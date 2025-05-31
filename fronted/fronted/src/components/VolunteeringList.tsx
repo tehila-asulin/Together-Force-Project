@@ -53,57 +53,25 @@ interface Props {
 const VolunteeringList = ({filterByCitiesSkills}:Props) => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
-  const [params,setParams]=useState<any>()
-  const getParams = () => {
-      if (!currentUser) return {};
-
-      if ('organizationNumber' in currentUser) {
-        return { organizationNumber: currentUser.organizationNumber };
-      }
-
-      if (
-        filterByCitiesSkills === false &&
+  const requestParams =
+    currentUser && 'organizationNumber' in currentUser
+      ? { organizationNumber: currentUser.organizationNumber }
+      : filterByCitiesSkills ===false  &&
+        currentUser &&
         'selectedCities' in currentUser &&
         'selectedVolunteerOptions' in currentUser
-      ) {
-        return {
+      ? {
           selectedCities: currentUser.selectedCities,
           selectedOptions: currentUser.selectedVolunteerOptions,
-        };
-      }
-
-      if (filterByCitiesSkills === true&&'_id' in currentUser) {
-        return { volunteerId: currentUser._id };
-      }
-
-      return {};
-    };
-   useEffect(() => {
-  const newParams = getParams();
-  setParams(newParams);
-}, [filterByCitiesSkills, currentUser]);
-
-  // const requestParams =
-  // console.log(filterByCitiesSkill);
-  
-  //   currentUser && 'organizationNumber' in currentUser
-  //     ? { organizationNumber: currentUser.organizationNumber }
-  //     : filterByCitiesSkill === 'true' &&
-  //       currentUser &&
-  //       'selectedCities' in currentUser &&
-  //       'selectedVolunteerOptions' in currentUser
-  //     ? {
-  //         selectedCities: currentUser.selectedCities,
-  //         selectedOptions: currentUser.selectedVolunteerOptions,
-  //       }
-  //     : currentUser && '_id' in currentUser
-  //     ? {
-  //         volunteerId: currentUser._id,
-  //       }
-  //     : {};
+        }
+      : currentUser && '_id' in currentUser
+      ? {
+          volunteerId: currentUser._id,
+        }
+      : {};
 
   const { data: filteredVolunteering, isLoading, isError, error } =
-    useGetFilteredVolunteeringQuery(params);
+    useGetFilteredVolunteeringQuery(requestParams);
 
   useEffect(() => {
     
@@ -126,7 +94,7 @@ const VolunteeringList = ({filterByCitiesSkills}:Props) => {
   <>
     {filteredVolunteering && filteredVolunteering.length > 0 ? (
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-        {filteredVolunteering.map((v: Volunteering) => (
+        {filteredVolunteering?.map((v: Volunteering) => (
           <VolunteeringCard key={v._id} volunteering={v} />
         ))}
       </div>

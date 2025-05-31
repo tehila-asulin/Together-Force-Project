@@ -912,7 +912,7 @@ const SingUpOrganization = () => {
               </Box>
             )}
             <CardActions sx={styles.cardActions}>
-              <Button type="submit" size="sm" variant="solid">
+              <Button type="submit" size="sm" variant="solid"> 
                 {isEditMode ? "עדכן" : "הירשם"}
               </Button>
             </CardActions>

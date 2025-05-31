@@ -11,4 +11,5 @@ export interface Volunteering {
   deadline: Date;
   createdAt: Date; 
   updatedAt?: Date;
+  rating?:number
 }

@@ -68,7 +68,7 @@ const VolunteeringForm = () => {
         throw new Error("Missing organizationNumber");
       }
 
-      const res = await createNewVolunteering(updatedVo).unwrap();
+       await createNewVolunteering(updatedVo).unwrap();
       reset();
       navigate("/");
     } catch (error: any) {

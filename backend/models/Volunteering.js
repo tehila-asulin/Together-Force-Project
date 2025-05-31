@@ -17,6 +17,12 @@ const volunteeringSchema = new mongoose.Schema({
     enum: Object.values(statusV),
     default: statusV.PENDING
   },
+    rating: {
+    type: Number,
+    min: 1,
+    max: 5,
+    default: null, 
+  },
   byOrganizationNumber: Number,
   madeByVolunteerEmail: String,
   deadline: Date,
