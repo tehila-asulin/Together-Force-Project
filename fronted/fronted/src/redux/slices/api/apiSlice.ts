@@ -101,7 +101,7 @@ const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["TogetherForce"], // הוספנו Volunteering
+  tagTypes: ["TogetherForce"], 
   endpoints: () => ({}),
 });
 
