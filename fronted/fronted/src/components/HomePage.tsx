@@ -4,42 +4,21 @@ import { Link } from "react-router-dom";
 import { selectUserMode } from "../redux/slices/togetherForceSlice";
 import { UserModes } from "../interface/UserModes";
 import logo from "../assets/logo.png";
+import {styles} from '../styles/style';
 
 const HomePage = () => {
   const userMode = useSelector(selectUserMode);
 
-  return (
-    <Box sx={{ width: "80vw", height: "80vh", position: "relative", overflow: "hidden" }}>
-      {/* רקע כתמונה מלאה */}
+    return (
+    <Box sx={styles.containerBox}>
       <Box
         sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+          ...styles.backgroundBox,
           backgroundImage: `url(${logo})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          opacity: 0.1,
-          zIndex: 1,
         }}
       />
 
-      {/* תוכן בקדמה */}
-      <Box
-        sx={{
-          position: "relative",
-          zIndex: 2,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          px: 2,
-        }}
-      >
+      <Box sx={styles.contentBox}>
         <Stack spacing={2}>
           {userMode === UserModes.Volunteer && (
             <>
@@ -65,7 +44,6 @@ const HomePage = () => {
         </Stack>
       </Box>
     </Box>
-
   );
 };
 

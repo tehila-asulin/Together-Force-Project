@@ -528,6 +528,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import {styles} from '../styles/style';
 
 interface Props {
   volunteering: Volunteering;
@@ -655,89 +656,30 @@ const VolunteeringCard = ({ volunteering }: Props) => {
 
   return (
     <>
-      <Card
-        sx={{
-          width: 320,
-          maxWidth: '100%',
-          boxShadow: 'lg',
-          position: 'relative',
-          backgroundColor: isCompleted
-            ? '#e0f7fa'
-            : isInProgress
-              ? '#f5f5f5'
-              : 'white',
-          opacity: isCompleted ? 0.7 : 1,
-          pointerEvents: isCompleted ? 'none' : 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
+      <Card sx={styles.cardStyle(isCompleted, isInProgress)}>
         {relativeTime && (
-          <Typography
-            level="body-xs"
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              backgroundColor: 'background.level1',
-              px: 1,
-              py: 0.5,
-              borderRadius: '8px',
-              fontSize: '0.75rem',
-            }}
-          >
+          <Typography level="body-xs" sx={styles.relativeTimeStyle}>
             {relativeTime}
           </Typography>
         )}
 
         {userMode === UserModes.Organization && isInProgress && volunteer && volunteering.rating === null && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 8,
-              left: 8,
-              display: 'flex',
-              alignItems: 'center',
-              backgroundColor: 'background.level1',
-              px: 1,
-              py: 0.5,
-              borderRadius: '8px',
-            }}
-          >
+          <Box sx={styles.takenByStyle}>
             <CheckCircleIcon sx={{ color: 'blue', mr: 0.5 }} />
             <Typography level="body-sm">נלקח ע"י {volunteer.name}</Typography>
           </Box>
         )}
 
         {userMode === UserModes.Organization && volunteering.rating != null && volunteer && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 8,
-              left: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'start',
-              zIndex: 2,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={styles.completedRatingBoxStyle}>
+            <Box sx={styles.completedInnerBoxStyle}>
               <CheckCircleIcon sx={{ color: 'green', mr: 0.5 }} />
               <Typography sx={{ backgroundColor: 'transparent', p: 0 }} level="body-sm">
                 בוצע ע"י {volunteer.name}
               </Typography>
             </Box>
 
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'row-reverse',
-                mt: 0.5,
-                gap: 1,
-              }}
-            >
+            <Box sx={styles.ratingSectionStyle}>
               <Typography level="body-sm" sx={{ backgroundColor: 'transparent', p: 0 }}>
                 דירוג שניתן ע"י המתנדב
               </Typography>
@@ -747,49 +689,31 @@ const VolunteeringCard = ({ volunteering }: Props) => {
                 readOnly
                 size="large"
                 max={5}
-                sx={{
-                  "& .MuiRating-iconFilled": { color: "#ffb400" },
-                  "& .MuiRating-iconHover": { color: "#ffdb70" },
-                }}
+                sx={styles.ratingStarsStyle}
               />
             </Box>
           </Box>
         )}
 
-        <CardContent sx={{ alignItems: 'center', textAlign: 'center', mt: 6 }}>
+        <CardContent sx={styles.cardContentStyle}>
           {isVolunteerUser && (
             <Avatar
-              src={
-                organizationData?.profileImage
-                  ? organizationData.profileImage
-                  : "/static/images/avatar/1.jpg"
-              }
-              sx={{ '--Avatar-size': '4rem', mb: 1 }}
+              src={organizationData?.profileImage ? organizationData.profileImage : "/static/images/avatar/1.jpg"}
+              sx={styles.avatarStyle}
             />
           )}
 
-          <Typography level="title-lg" sx={{ mt: 1 }}>
+          <Typography level="title-lg" sx={styles.titleStyle}>
             {volunteering.title}
           </Typography>
 
-          <Typography
-            level="body-sm"
-            sx={{ maxWidth: '24ch', mt: 1, whiteSpace: 'pre-line' }}
-          >
+          <Typography level="body-sm" sx={styles.descriptionStyle}>
             {volunteering.description}
           </Typography>
         </CardContent>
 
         {isDisable && userMode === UserModes.Volunteer && (
-          <Box
-            sx={{
-              backgroundColor: '#e0f2f1',
-              p: 2,
-              borderRadius: 2,
-              textAlign: 'center',
-              mt: 2,
-            }}
-          >
+          <Box sx={styles.completedMessageBoxStyle}>
             <Typography fontWeight="bold" color="success">
               סיימת את ההתנדבות 🎉
             </Typography>
@@ -799,107 +723,91 @@ const VolunteeringCard = ({ volunteering }: Props) => {
           </Box>
         )}
 
-        <CardOverflow sx={{ mt: 'auto' }}>
-          <CardActions sx={{ display: 'flex', flexDirection: 'column', gap: 1, p: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              component={Link}
-              to={`/detailsVolunteering/${volunteering._id}`}
-              disabled={isCompleted || isDisable}
-            >
-              פרטים נוספים
-            </Button>
+        <CardActions sx={styles.cardActionsStyle}>
+          <Button
+            fullWidth
+            variant="outlined"
+            component={Link}
+            to={`/detailsVolunteering/${volunteering._id}`}
+            disabled={isCompleted || isDisable}
+          >
+            פרטים נוספים
+          </Button>
 
-            {userMode === UserModes.Organization ? (
-              <>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={handleDeleteVolunteering}
-                  disabled={isInProgress || isDisable}
-                >
-                  מחיקת ההתנדבות
-                </Button>
-                {volunteering.rating && (
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    onClick={handleMarkCompleted}
-                    disabled={isDisable}
-                  >
-                    סמן כהושלם
-                  </Button>
-                )}
-              </>
-            ) : isInProgress && volunteering.idMaker === currentUser?._id ? (
-              <>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={handleCancelVolunteering}
-                  disabled={isDisable}
-                >
-                  לביטול ההתנדבות
-                </Button>
-                <Button
-                  fullWidth
-                  variant="solid"
-                  color="success"
-                  onClick={handleFinishClick}
-                  disabled={isDisable}
-                >
-                  סיימתי
-                </Button>
-              </>
-            ) : (
+          {userMode === UserModes.Organization ? (
+            <>
               <Button
                 fullWidth
                 variant="outlined"
-                onClick={handleTakeVolunteering}
-                disabled={isInProgress || isCompleted || isDisable}
+                onClick={handleDeleteVolunteering}
+                disabled={isInProgress || isDisable}
               >
-                (: אני על זה
+                מחיקת ההתנדבות
               </Button>
-            )}
-          </CardActions>
-        </CardOverflow>
+              {volunteering.rating && (
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={handleMarkCompleted}
+                  disabled={isDisable}
+                >
+                  סמן כהושלם
+                </Button>
+              )}
+            </>
+          ) : isInProgress && volunteering.idMaker === currentUser?._id ? (
+            <>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={handleCancelVolunteering}
+                disabled={isDisable}
+              >
+                לביטול ההתנדבות
+              </Button>
+              <Button
+                fullWidth
+                variant="solid"
+                color="success"
+                onClick={handleFinishClick}
+                disabled={isDisable}
+              >
+                סיימתי
+              </Button>
+            </>
+          ) : (
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={handleTakeVolunteering}
+              disabled={isInProgress || isCompleted || isDisable}
+            >
+              (: אני על זה
+            </Button>
+          )}
+        </CardActions>
       </Card>
 
       <Dialog
         open={showRatingDialog}
         onClose={() => setShowRatingDialog(false)}
         PaperProps={{
-          sx: {
-            borderRadius: 3,
-            p: 2,
-            minWidth: 320,
-            bgcolor: "#f9fafb",
-            boxShadow:
-              "0px 8px 24px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.06)",
-          },
+          sx: styles.dialogPaperStyle,
         }}
       >
-        <DialogTitle
-          sx={{ m: 0, p: 2, fontWeight: "bold", fontSize: 22, color: "#333", textAlign: 'center' }}
-        >
+        <DialogTitle sx={styles.dialogTitleStyle}>
           מתנדב יקר! נשמח אם תדרג את חווית ההתנדבות שלך
           <IconButton
             aria-label="close"
             onClick={() => setShowRatingDialog(false)}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
+            sx={styles.closeIconStyle}
           >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
 
         <DialogContent>
-          <Stack spacing={3} alignItems="center" sx={{ py: 1 }}>
+          <Stack spacing={3} alignItems="center" sx={styles.dialogStackStyle}>
             <Typography component="p" variant="soft" color="neutral" sx={{ textAlign: 'center' }}>
               ?כמה נהנית מההתנדבות
             </Typography>
@@ -911,15 +819,12 @@ const VolunteeringCard = ({ volunteering }: Props) => {
               }
               size="large"
               max={5}
-              sx={{
-                "& .MuiRating-iconFilled": { color: "#ffb400" },
-                "& .MuiRating-iconHover": { color: "#ffdb70" },
-              }}
+              sx={styles.ratingStarsStyle}
             />
           </Stack>
         </DialogContent>
 
-        <DialogActions sx={{ px: 3, pb: 2 }}>
+        <DialogActions sx={styles.dialogActionsStyle}>
           <Button variant="outlined" onClick={() => setShowRatingDialog(false)}>
             ביטול
           </Button>
