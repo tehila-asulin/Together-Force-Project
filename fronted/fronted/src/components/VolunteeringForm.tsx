@@ -76,19 +76,18 @@ const VolunteeringForm = () => {
     }
   };
 
-  return (
+   return (
     <Box sx={styles.container}>
-      <Stack spacing={4} sx={styles.stack}>
-        <Card sx={styles.card}>
+      <Stack spacing={4} sx={styles.formStack}>
+        <Card sx={styles.formCard}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ mb: 1 }}>
-              <Typography level="title-md">Volunteer Info</Typography>
+              <Typography level="title-md">טופס הוספת בקשת הנתנדבות</Typography>
             </Box>
             <Divider />
 
-            {/* בחירת תחום התנדבות */}
-            <Box sx={{ width: 400 }}>
-              <Typography level="h4" sx={styles.titleVolunteerOptions}>
+            <Box sx={styles.volunteerCategoryBox}>
+              <Typography level="h4" sx={styles.volunteerOptionsTitle}>
                 אפשרויות התנדבות
               </Typography>
               {errors.title && (
@@ -116,12 +115,10 @@ const VolunteeringForm = () => {
               />
             </Box>
 
-            {/* בחירת עיר - באמצעות Autocomplete */}
-            <Sheet variant="outlined" sx={{ mt: 3, p: 2 }}>
-              <Typography level="body-sm" sx={styles.title}>
+            <Sheet variant="outlined" sx={{ ...styles.sheet, mt: 3 }}>
+              <Typography level="body-sm" sx={styles.sectionTitle}>
                 בחירת עיר
               </Typography>
-
               <Controller
                 name="origin"
                 control={control}
@@ -147,7 +144,6 @@ const VolunteeringForm = () => {
               />
             </Sheet>
 
-            {/* תיאור (לא חובה) */}
             <Controller
               name="description"
               control={control}
@@ -163,7 +159,6 @@ const VolunteeringForm = () => {
               )}
             />
 
-            {/* טלפון */}
             <Controller
               name="phone"
               control={control}
@@ -201,11 +196,13 @@ const VolunteeringForm = () => {
                 )}
               />
             </LocalizationProvider>
+
             {error && (
               <Box mt={2}>
                 <Alert severity="error">{error}</Alert>
               </Box>
             )}
+
             <CardOverflow sx={styles.cardOverflow}>
               <CardActions sx={styles.cardActions}>
                 <Button type="submit" size="sm" variant="solid">
