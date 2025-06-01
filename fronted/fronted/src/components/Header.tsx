@@ -357,14 +357,6 @@ const Header = () => {
     setSigninAnchorEl(event.currentTarget);
   };
 
-  // const handleClose = (mode?: UserModes) => {
-  //   if (mode) {
-  //     dispatch(setUserMode(mode));
-  //   }
-  //   setSignupAnchorEl(null);
-  //   setSigninAnchorEl(null);
-  // };
-
   const handleLogout = () => {
     Cookies.remove("token");
     localStorage.removeItem("user");
@@ -437,10 +429,10 @@ const Header = () => {
                 התחברות
               </Button>
               <Menu anchorEl={signinAnchorEl} open={signinOpen}>
-                <MenuItem component={Link} to="/signin/volunteer">
+                <MenuItem component={Link} to="/signin/volunteer" onClick={() => setSigninAnchorEl(null)}>
                   מתנדב
                 </MenuItem>
-                <MenuItem component={Link} to="/signin/organization">
+                <MenuItem component={Link} to="/signin/organization" onClick={() => setSigninAnchorEl(null)} >
                   ארגון
                 </MenuItem>
               </Menu>
@@ -449,10 +441,10 @@ const Header = () => {
                 הרשמה
               </Button>
               <Menu anchorEl={signupAnchorEl} open={signupOpen} >
-                <MenuItem component={Link} to="/signup/volunteer">
+                <MenuItem component={Link} to="/signup/volunteer" onClick={() => setSignupAnchorEl(null)}>
                   מתנדב
                 </MenuItem>
-                <MenuItem component={Link} to="/signup/organization">
+                <MenuItem component={Link} to="/signup/organization" onClick={() => setSignupAnchorEl(null)}>
                   ארגון
                 </MenuItem>
               </Menu>
