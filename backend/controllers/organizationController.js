@@ -1,102 +1,6 @@
-// const Organization = require('../models/Organization');
-// const cloudinary = require('cloudinary').v2;
-// module.exports = (io) => {
-//   return {
-
-//     addOrganization: async (req, res) => {
-//       const organization = await Organization.create(req.body);
-//       res.json(organization)
-//     },
-
-//     deleteOrganization: async (req, res) => {
-//       const { id } = req.params
-//       console.log(id);
-//       try {
-//         const deleteOrganization = await Organization.findOneAndDelete({ _id: id });
-//         if (!deleteOrganization) {
-//           return res.status(404).json({ message: 'Organization not found' });
-//         }
-//         res.json({ message: 'Organization deleted successfully' });
-//       } catch (error) {
-//         console.error('Failed to delete Organization:', error);
-//         res.status(500).json({ message: 'Failed to delete Organization' });
-//       }
-
-//     },
-
-//     updateOrganization: async (req, res) => {
-//       const { id } = req.params;
-//       const { name, email, phone, history, password, organizationNumber } = req.body;
-//       let profileImageUrl;
-
-//       try {
-//         if (req.files && req.files.profileImage) {
-//           try {
-//             const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
-//               folder: "volunteers"
-//             });
-//             profileImageUrl = result.secure_url;
-//           } catch (err) {
-//             console.error("Cloudinary upload error:", err);
-//             return res.status(500).json({ message: "Error uploading image to Cloudinary" });
-//           }
-//         }
-
-//         const updateFields = { name, email, phone, history, organizationNumber };
-//         if (profileImageUrl) {
-//           updateFields.profileImage = profileImageUrl;
-//         }
-//         if (password && password.trim() !== "") {
-//           updateFields.password = password;
-//         }
-
-//         const updatedOrganization = await Organization.findOneAndUpdate(
-//           { _id: id },
-//           updateFields,
-//           { new: true }
-//         );
-
-//         if (!updatedOrganization) {
-//           return res.status(404).json({ message: "Organization not found" });
-//         }
-//         io.emit('VolunteeringRoom', updatedOrganization);
-//         res.json(updatedOrganization);
-//       } catch (error) {
-//         console.error("Failed to update Organization:", error);
-//         res.status(500).json({ message: "Failed to update Organization" });
-//       }
-//     },
-
-
-//     getAllOrganizations: async (req, res) => {
-//       try {
-//         const organizations = await Organization.find();
-//         res.json(organizations);
-//       } catch (error) {
-//         console.error('Failed to get organizations:', error);
-//         res.status(500).json({ message: 'Failed to get organizations' });
-//       }
-//     },
-
-//     getOrganizationByNumber: async (req, res) => {
-//       const { id } = req.params;
-//       console.log(id)
-
-//       try {
-//         const organization = await Organization.findOne({ organizationNumber: id });
-//         if (!organization) {
-//           return res.status(404).json({ message: 'Organization not found' });
-//         }
-//         res.json(organization);
-//       } catch (error) {
-//         console.error('Failed to get organization:', error);
-//         res.status(500).json({ message: 'Failed to get organization' });
-//       }
-//     }
-//   }
-// }
 const Organization = require('../models/Organization');
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('../config/cloudinary');
+const jwt = require('jsonwebtoken');
 module.exports = (io) => {
   return {
 
@@ -123,14 +27,15 @@ module.exports = (io) => {
 
     updateOrganization: async (req, res) => {
       const { id } = req.params;
-      const { name, email, phone, history, password, organizationNumber } = req.body;
+      const { name, phone } = req.body;
       let profileImageUrl;
 
       try {
+    
         if (req.files && req.files.profileImage) {
           try {
             const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
-              folder: "volunteers"
+              folder: "organizations"
             });
             profileImageUrl = result.secure_url;
           } catch (err) {
@@ -139,14 +44,12 @@ module.exports = (io) => {
           }
         }
 
-        const updateFields = { name, email, phone, history, organizationNumber };
-        if (profileImageUrl) {
-          updateFields.profileImage = profileImageUrl;
-        }
-        if (password && password.trim() !== "") {
-          updateFields.password = password;
-        }
+        const updateFields = {};
+        if (name) updateFields.name = name;
+        if (phone) updateFields.phone = phone;
+        if (profileImageUrl) updateFields.profileImage = profileImageUrl;
 
+        
         const updatedOrganization = await Organization.findOneAndUpdate(
           { _id: id },
           updateFields,
@@ -156,13 +59,28 @@ module.exports = (io) => {
         if (!updatedOrganization) {
           return res.status(404).json({ message: "הארגון לא נמצא" });
         }
-        io.emit('VolunteeringRoom', updatedOrganization);
-        res.json(updatedOrganization);
+
+        const organizationInfo = {
+          _id: updatedOrganization._id,
+          name: updatedOrganization.name,
+          email: updatedOrganization.email,
+          phone: updatedOrganization.phone,
+          profileImage: updatedOrganization.profileImage,
+          organizationNumber: updatedOrganization.organizationNumber,
+          history: updatedOrganization.history,
+        };
+
+        const accessToken = jwt.sign(organizationInfo, process.env.ACCESS_TOKEN_SECRET);
+        io.emit('VolunteeringRoom', organizationInfo);
+       
+        res.json({ accessToken, organization: organizationInfo });
+
       } catch (error) {
         console.error("נכשל בעדכון הארגון:", error);
         res.status(500).json({ message: "נכשל בעדכון הארגון" });
       }
     },
+
 
 
     getAllOrganizations: async (req, res) => {

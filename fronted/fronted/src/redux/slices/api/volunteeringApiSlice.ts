@@ -1,7 +1,5 @@
 import apiSlice from './apiSlice';
 import { Volunteering } from '../../../interface/Volunteering'
-// ממשק לנתוני התנדבות
-
 
 const volunteeringApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

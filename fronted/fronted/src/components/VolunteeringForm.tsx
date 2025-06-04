@@ -1,14 +1,4 @@
-import * as React from "react";
-import {
-  Box,
-  Divider,
-  Stack,
-  Typography,
-  Card,
-  CardActions,
-  CardOverflow,
-  Sheet,
-} from "@mui/joy";
+import {Box,Divider,Stack, Typography,Card,CardActions,CardOverflow,Sheet,} from "@mui/joy";
 import Button from "@mui/joy/Button";
 import { Controller, useForm } from "react-hook-form";
 import { styles } from "../styles/style";
@@ -17,11 +7,10 @@ import AddVolunteeringSchema from "../schemas/AddVolunteeringSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import cities from "../../public/dataCities.json";
 import { useCreateVolunteeringMutation } from "../redux/slices/api/volunteeringApiSlice";
-import { useEditOrganizationMutation } from "../redux/slices/api/organizationApiSlice";
 import { selectCurrentUser } from "../redux/slices/togetherForceSlice";
 import { useSelector } from "react-redux";
 import { Volunteering } from "../interface/Volunteering";
-import { TextField, Autocomplete,Alert } from "@mui/material";
+import { TextField, Autocomplete, Alert } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -35,14 +24,14 @@ const VolunteeringForm = () => {
     handleSubmit,
     watch,
     control,
-    formState: { errors },
+    formState: { errors ,isSubmitting},
   } = useForm({
     mode: "onBlur",
     resolver: zodResolver(AddVolunteeringSchema),
     defaultValues: {
       title: "",
       description: "",
-      origin: "", 
+      origin: "",
       phone: "",
       isDone: false,
       deadline: undefined,
@@ -50,9 +39,7 @@ const VolunteeringForm = () => {
   });
 
   const [createNewVolunteering] = useCreateVolunteeringMutation();
-  const [updateOrganization] = useEditOrganizationMutation();
   const currentUser = useSelector(selectCurrentUser);
-
   const onSubmit = async (data: any) => {
     try {
       console.log("Form Data:", data);
@@ -68,7 +55,7 @@ const VolunteeringForm = () => {
         throw new Error("Missing organizationNumber");
       }
 
-       await createNewVolunteering(updatedVo).unwrap();
+      await createNewVolunteering(updatedVo).unwrap();
       reset();
       navigate("/");
     } catch (error: any) {
@@ -76,7 +63,7 @@ const VolunteeringForm = () => {
     }
   };
 
-   return (
+  return (
     <Box sx={styles.container}>
       <Stack spacing={4} sx={styles.formStack}>
         <Card sx={styles.formCard}>
@@ -205,7 +192,7 @@ const VolunteeringForm = () => {
 
             <CardOverflow sx={styles.cardOverflow}>
               <CardActions sx={styles.cardActions}>
-                <Button type="submit" size="sm" variant="solid">
+                <Button type="submit" size="sm" variant="solid" disabled={isSubmitting}>
                   שמירה
                 </Button>
               </CardActions>

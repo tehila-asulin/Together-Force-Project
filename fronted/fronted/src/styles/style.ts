@@ -1,4 +1,3 @@
-import { SxProps, Theme } from "@mui/material";
 export const styles = {
   container: { display: 'flex', justifyContent: 'center', mt: 4 },
   stack: { width: '100%', maxWidth: 400 },
