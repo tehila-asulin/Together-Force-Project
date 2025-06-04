@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 const AddVolunteeringSchema = z.object({
-  title: z.string().min(1, "יש לבחור אפשרות התנדבות אחת"), // חובה לבחור אחת
+  title: z.string().min(1, "יש לבחור אפשרות התנדבות אחת"),
 
-  description: z.string().optional(), // לא חובה
+  description: z.string().optional(),
 
  origin: z.string().nonempty("יש לבחור עיר אחת"),
 
   phone: z
     .string()
-    .regex(/^0\d{1,2}-?\d{7}$/, "מספר טלפון לא תקין"), // דוגמה לתבנית: 050-1234567 או 03-1234567
+    .regex(/^0\d{1,2}-?\d{7}$/, "מספר טלפון לא תקין"),
 
   isDone: z.boolean({
     required_error: "יש לבחור אם המשימה הושלמה או לא",

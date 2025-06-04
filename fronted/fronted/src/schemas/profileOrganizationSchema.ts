@@ -21,8 +21,8 @@ export const getProfileOrganizationSchema = (isEditMode: boolean) =>
 
     organizationNumber: z
       .string()
-      .min(10, "מספר לא תקין")
-      .max(10, " מספר לא תקין "),
+      .min(10, "מספר הארגון חייב לכלול 10 ספרות")
+      .max(10, "מספר הארגון חייב לכלול 10 ספרות"),
   });
 
 export default getProfileOrganizationSchema;

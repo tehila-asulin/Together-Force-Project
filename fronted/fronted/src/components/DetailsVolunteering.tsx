@@ -1,28 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useGetVolunteeringByIdQuery } from "../redux/slices/api/volunteeringApiSlice";
 import { useGetOrganizationByNumberQuery } from "../redux/slices/api/organizationApiSlice";
-import {
-  Box,
-  Typography,
-  CircularProgress,
-  Avatar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  IconButton
-} from "@mui/material";
+import { Box, Typography, CircularProgress, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 const DetailsVolunteering = () => {
   const { volunteeringId } = useParams<{ volunteeringId: string }>();
   const volunteeringIdStr = volunteeringId ? String(volunteeringId) : "";
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
-  //const [updateVolunteering]=useEditVolunteeringMutation()
-
-
   const {
     data: volunteering,
     error: volunteeringError,
@@ -41,7 +27,7 @@ const DetailsVolunteering = () => {
 
   const handleClose = () => {
     setOpen(false);
-    navigate(-1); 
+    navigate(-1);
   };
   if (volunteeringLoading || orgLoading) {
     return (
@@ -104,11 +90,11 @@ const DetailsVolunteering = () => {
           </Typography>
 
           <Typography variant="body2">
-           📅 לביצוע עד: {new Date(volunteering.deadline).toLocaleString("he-IL", {
-             dateStyle: "full",
-             timeStyle: "short",
+            📅 לביצוע עד: {new Date(volunteering.deadline).toLocaleString("he-IL", {
+              dateStyle: "full",
+              timeStyle: "short",
             })}
-           </Typography>
+          </Typography>
 
 
           <Typography variant="body2">
@@ -118,7 +104,7 @@ const DetailsVolunteering = () => {
       </DialogContent>
 
       <DialogActions sx={{ justifyContent: "center" }}>
-     
+
       </DialogActions>
     </Dialog>
   );
