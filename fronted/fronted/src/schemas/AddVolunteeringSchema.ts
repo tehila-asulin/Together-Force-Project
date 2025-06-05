@@ -10,10 +10,6 @@ const AddVolunteeringSchema = z.object({
   phone: z
     .string()
     .regex(/^0\d{1,2}-?\d{7}$/, "מספר טלפון לא תקין"),
-
-  isDone: z.boolean({
-    required_error: "יש לבחור אם המשימה הושלמה או לא",
-  }),
 deadline: z
   .date({
     required_error: "יש להזין תאריך יעד",

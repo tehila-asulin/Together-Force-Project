@@ -27,10 +27,12 @@ const register = async (req, res) => {
   let profileImageUrl = "";
   if (req.files && req.files.profileImage) {
     try {
+     console.log("req.files:", req.files);
       const result = await cloudinary.uploader.upload(req.files.profileImage.tempFilePath, {
         folder: "organizations"
       });
       profileImageUrl = result.secure_url;
+       console.log(profileImageUrl);
     } catch (err) {
       return res.status(500).json({ message: "שגיאה בהעלאת תמונה" });
     }
