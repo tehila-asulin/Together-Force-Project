@@ -32,7 +32,6 @@ const VolunteeringForm = () => {
       description: "",
       origin: "",
       phone: "",
-      isDone: false,
       deadline: undefined,
     },
   });
